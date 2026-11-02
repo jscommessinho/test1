@@ -272,7 +272,7 @@ jobs:
                   assert league['league_name']=='Serie A' and league['country_code']=='ITA'
                   client=Client(os.environ['PITCHAPI_API_KEY'],budget=1,pause=0)
                   data=client.get('/v1/leagues/'+league['league_id']+'/matches',
-                                  {'season':'2026/2027'})
+                                  {'season':'2026/2027','status':'upcoming'})
                   if (data.get('league') or {}).get('id')!=league['league_id'] or not isinstance(data.get('matches'),list):
                       report['status']='PITCHAPI_LEAGUE_RESPONSE_INVALID'
                   else:
