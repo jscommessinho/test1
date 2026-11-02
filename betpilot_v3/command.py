@@ -14,6 +14,7 @@ import json
 import os
 import sys
 import time
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
@@ -98,6 +99,7 @@ def execute(request, *, output_dir: Path, sources_root: Path | None = None,
             native_runner=None, live_runner=None, repo_root: Path | None = None):
     """Run once, with zero hidden retries. Runners injectable for offline tests."""
     start = time.perf_counter()
+    staged_sqlite_sources = None
     out = Path(output_dir).resolve()
     result = {
         "schema": SCHEMA, "request": request,
@@ -153,57 +155,83 @@ def execute(request, *, output_dir: Path, sources_root: Path | None = None,
                 result.update(status="AUTHENTICATION_ERROR",
                               reason_code="MISSING_PROVIDER_CREDENTIALS",
                               reason="Credentials unavailable in the authorized runner: " + ", ".join(missing))
-            elif not warehouse_root or not history_root or not (
-                    Path(warehouse_root).is_dir() and Path(history_root).is_dir()):
-                # SQLite is an authentic source; it is NOT the original GA3/GTS3
-                # archive format and cannot be substituted silently.
-                sqlite_count = 0
-                if sqlite_root is not None and Path(sqlite_root).is_dir():
-                    from betpilot_v3.sqlite_source import _files
-                    sqlite_count = sum(1 for _ in _files(Path(sqlite_root)))
-                result.update(status="DATA_UNAVAILABLE",
-                              reason_code=("SQLITE_PRESENT_NATIVE_HISTORY_MISSING" if sqlite_count
-                                           else "PERSISTENT_PITCHAPI_ARCHIVES_MISSING"),
-                              reason="Read-only SQLite fixture sources do not replace the original GA3/GTS3 native history archive format",
-                              pitchapi_sqlite_archives_found=sqlite_count)
             else:
-                event_day = day_utc or _fixture_day_from_index(fixture_index, home, away, timestamp)
-                if event_day is None and sqlite_root is not None:
-                    from betpilot_v3.sqlite_source import select_fixture
-                    indexed = select_fixture(sqlite_root, request, now=timestamp)
-                    if indexed is not None:
-                        event_day = indexed['kickoff'][:10]
-                        date_origin = 'read_only_pitchapi_sqlite'
-                date_origin = "explicit" if day_utc else "authenticated_local_index"
-                if not day_utc and not event_day and sqlite_root is not None:
-                    date_origin = "sqlite_index_empty"
-                if event_day is None:
-                    # Authenticated, bounded API-Sports future-fixture discovery
-                    # happens in the native bridge with the same quota client.
-                    date_origin = "authenticated_api_sports_autodiscovery"
-                # Calls the original budget-limited cross-provider source join.
-                from betpilot_v3.real_prematch_bridge import execute as live_default
-                native_result = (live_runner or live_default)(SimpleNamespace(
-                    request=request, day_utc=event_day, country_code=None,
-                    competition=None, api_league_id=None, api_season=None,
-                    api_fixture_id=None, warehouse_root=Path(warehouse_root),
-                    history_root=Path(history_root), team_stats_root=team_stats_root,
-                    team_stats_archive=None, output_dir=out / "authenticated_native",
-                    registry=Path(__file__).resolve().parents[1] /
-                             "data/pitchapi/league_pins_77.json"))
-                result.update(mode="AUTHENTICATED_NATIVE_PIPELINE",
-                              date_utc_checked=event_day,
-                              date_selection=date_origin,
-                              api_source_status=native_result.get("status"))
-                if native_result.get("status") == "PREMATCH_RESEARCH_REPORT_AVAILABLE":
-                    result.update(status="RESEARCH_REPORT_AVAILABLE",
-                                  decision=native_result.get("decision"), five_engines_verified=True,
-                                  real_fixture_analysis_confirmed=True,
-                                  native_report="authenticated_native/five_engine_analysis/NATIVE_CHAIN/BA3/BETANALYZER_3_ANALYSIS.json")
+                # A verified read-only original PitchAPI SQLite snapshot can be
+                # materialized as ephemeral native *source* inputs. Original
+                # model formulas and provider ZIPs are not modified.
+                if (sqlite_root and Path(sqlite_root).is_dir() and
+                        (not warehouse_root or not history_root or
+                         not Path(warehouse_root).is_dir() or
+                         not Path(history_root).is_dir())):
+                    from betpilot_v3.sqlite_native_export import convert
+                    staged_sqlite_sources = tempfile.TemporaryDirectory(prefix='betpilot-pitchapi-')
+                    root = Path(staged_sqlite_sources.name)
+                    warehouse_root = root / 'warehouse'
+                    warehouse_root.mkdir(parents=True)
+                    history_root = root / 'history'
+                    team_stats_root = root / 'team_stats'
+                    audit = convert(sqlite_root, history_root, team_stats_root,
+                                    cutoff=timestamp, repo_root=repo_root)
+                    result['sqlite_conversion'] = {
+                        'status': audit['status'],
+                        'history_records': audit['history_records'],
+                        'xg_from_team_stats_not_shot_reconstruction': True,
+                        'not_historically_captured_prematch': True,
+                    }
+                if not warehouse_root or not history_root or not (
+                        Path(warehouse_root).is_dir() and Path(history_root).is_dir()):
+                    # Authentic source still unavailable; do not pretend to have a history archive.
+                    sqlite_count = 0
+                    if sqlite_root is not None and Path(sqlite_root).is_dir():
+                        from betpilot_v3.sqlite_source import _files
+                        sqlite_count = sum(1 for _ in _files(Path(sqlite_root)))
+                    result.update(status="DATA_UNAVAILABLE",
+                                  reason_code=("SQLITE_PRESENT_NATIVE_HISTORY_MISSING" if sqlite_count
+                                               else "PERSISTENT_PITCHAPI_ARCHIVES_MISSING"),
+                                  reason="Read-only SQLite fixture sources do not replace the original GA3/GTS3 native history archive format",
+                                  pitchapi_sqlite_archives_found=sqlite_count)
                 else:
-                    result.update(status="NO_BET_DATA_OR_INTEGRATION_BLOCKED",
-                                  reason_code=native_result.get("reason_code", "NATIVE_CHAIN_FAILED"),
-                                  reason=native_result.get("reason", "Authentic source unavailable"))
+                    event_day = day_utc or _fixture_day_from_index(fixture_index, home, away, timestamp)
+                    if event_day is None and sqlite_root is not None:
+                        from betpilot_v3.sqlite_source import select_fixture
+                        indexed = select_fixture(sqlite_root, request, now=timestamp)
+                        if indexed is not None:
+                            event_day = indexed['kickoff'][:10]
+                            date_origin = 'read_only_pitchapi_sqlite'
+                    if day_utc:
+                        date_origin = "explicit"
+                    elif event_day and 'date_origin' not in locals():
+                        date_origin = "authenticated_local_index"
+                    if not day_utc and not event_day and sqlite_root is not None:
+                        date_origin = "sqlite_index_empty"
+                    if event_day is None:
+                        # Authenticated, bounded API-Sports future-fixture discovery
+                        # happens in the native bridge with the same quota client.
+                        date_origin = "authenticated_api_sports_autodiscovery"
+                    # Calls the original budget-limited cross-provider source join.
+                    from betpilot_v3.real_prematch_bridge import execute as live_default
+                    native_result = (live_runner or live_default)(SimpleNamespace(
+                        request=request, day_utc=event_day, country_code=None,
+                        competition=None, api_league_id=None, api_season=None,
+                        api_fixture_id=None, warehouse_root=Path(warehouse_root),
+                        history_root=Path(history_root), team_stats_root=team_stats_root,
+                        team_stats_archive=None, output_dir=out / "authenticated_native",
+                        registry=Path(__file__).resolve().parents[1] /
+                                 "data/pitchapi/league_pins_77.json"))
+                    result.update(mode="AUTHENTICATED_NATIVE_PIPELINE",
+                                  date_utc_checked=event_day,
+                                  date_selection=date_origin,
+                                  api_source_status=native_result.get("status"))
+                    if native_result.get("status") == "PREMATCH_RESEARCH_REPORT_AVAILABLE":
+                        result.update(status="RESEARCH_REPORT_AVAILABLE",
+                                      decision=native_result.get("decision"), five_engines_verified=True,
+                                      real_fixture_analysis_confirmed=True,
+                                      native_report="authenticated_native/five_engine_analysis/NATIVE_CHAIN/BA3/BETANALYZER_3_ANALYSIS.json")
+                    else:
+                        result.update(status="NO_BET_DATA_OR_INTEGRATION_BLOCKED",
+                                      reason_code=native_result.get("reason_code", "NATIVE_CHAIN_FAILED"),
+                                      reason=native_result.get("reason", "Authentic source unavailable"))
+
     except (FullAnalysisBlocked, ValueError, OSError, KeyError, TypeError, ImportError) as exc:
         result.update(status="NO_BET_DATA_OR_INTEGRATION_BLOCKED",
                       reason_code=getattr(exc, "code", type(exc).__name__),
@@ -212,6 +240,8 @@ def execute(request, *, output_dir: Path, sources_root: Path | None = None,
         result["timing_ms"]["total"] = round((time.perf_counter() - start) * 1000, 2)
         result = _redact_provider_secrets(result)
         _write(out, result)
+        if staged_sqlite_sources is not None:
+            staged_sqlite_sources.cleanup()
     return result
 
 
