@@ -30,6 +30,17 @@ if VENDOR.exists() and str(VENDOR) not in sys.path:
 class BudgetError(ValueError): pass
 
 
+class ProviderEndpointError(BudgetError):
+    """Safe classified provider failure; never expose the provider response.
+
+    Distinguish API subscription restrictions from internal code failures.
+    Only fixed local codes are exposed in CLI/Actions status output.
+    """
+    def __init__(self, code):
+        self.code = code
+        super().__init__(code)
+
+
 def utc(dt):
     if dt.tzinfo is None or dt.utcoffset() is None:raise BudgetError('timezone required')
     return dt.astimezone(timezone.utc)
@@ -85,8 +96,18 @@ class QuotaClient:
                 hdr=response.headers
                 hdrremain=hdr.get('x-ratelimit-requests-remaining') if hdr else None
                 obj=json.loads(raw)
-                if not isinstance(obj,dict) or obj.get('errors'):
-                    raise BudgetError('provider error, quota or parameters rejected')
+                if not isinstance(obj,dict):
+                    raise ProviderEndpointError('API_SPORTS_INVALID_RESPONSE')
+                errors=obj.get('errors')
+                if errors:
+                    error_keys=set(errors.keys()) if isinstance(errors,dict) else set()
+                    if 'plan' in error_keys:
+                        raise ProviderEndpointError('API_SPORTS_PLAN_RESTRICTED')
+                    if 'requests' in error_keys or 'rateLimit' in error_keys:
+                        raise ProviderEndpointError('API_SPORTS_QUOTA_REJECTED')
+                    if 'parameters' in error_keys or 'query' in error_keys:
+                        raise ProviderEndpointError('API_SPORTS_PARAMETERS_REJECTED')
+                    raise ProviderEndpointError('API_SPORTS_PROVIDER_REJECTED')
                 return obj,hdrremain
         except HTTPError as e:raise BudgetError('provider HTTP '+str(e.code)) from None
         except (URLError,TimeoutError,UnicodeError,ValueError) as e:
