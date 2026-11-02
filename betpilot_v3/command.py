@@ -94,6 +94,7 @@ def execute(request, *, output_dir: Path, sources_root: Path | None = None,
             warehouse_root: Path | None = None, history_root: Path | None = None,
             team_stats_root: Path | None = None, fixture_index: Path | None = None,
             day_utc: str | None = None, now: datetime | None = None,
+            sqlite_root: Path | None = None,
             native_runner=None, live_runner=None, repo_root: Path | None = None):
     """Run once, with zero hidden retries. Runners injectable for offline tests."""
     start = time.perf_counter()
@@ -154,15 +155,32 @@ def execute(request, *, output_dir: Path, sources_root: Path | None = None,
                               reason="Credentials unavailable in the authorized runner: " + ", ".join(missing))
             elif not warehouse_root or not history_root or not (
                     Path(warehouse_root).is_dir() and Path(history_root).is_dir()):
+                # SQLite is an authentic source; it is NOT the original GA3/GTS3
+                # archive format and cannot be substituted silently.
+                sqlite_count = 0
+                if sqlite_root is not None and Path(sqlite_root).is_dir():
+                    from betpilot_v3.sqlite_source import _files
+                    sqlite_count = sum(1 for _ in _files(Path(sqlite_root)))
                 result.update(status="DATA_UNAVAILABLE",
-                              reason_code="PERSISTENT_PITCHAPI_ARCHIVES_MISSING",
-                              reason="The configured read-only PitchAPI warehouse/history directories are unavailable")
+                              reason_code=("SQLITE_PRESENT_NATIVE_HISTORY_MISSING" if sqlite_count
+                                           else "PERSISTENT_PITCHAPI_ARCHIVES_MISSING"),
+                              reason="Read-only SQLite fixture sources do not replace the original GA3/GTS3 native history archive format",
+                              pitchapi_sqlite_archives_found=sqlite_count)
             else:
                 event_day = day_utc or _fixture_day_from_index(fixture_index, home, away, timestamp)
+                if event_day is None and sqlite_root is not None:
+                    from betpilot_v3.sqlite_source import select_fixture
+                    indexed = select_fixture(sqlite_root, request, now=timestamp)
+                    if indexed is not None:
+                        event_day = indexed['kickoff'][:10]
+                        date_origin = 'read_only_pitchapi_sqlite'
                 date_origin = "explicit" if day_utc else "authenticated_local_index"
+                if not day_utc and not event_day and sqlite_root is not None:
+                    date_origin = "sqlite_index_empty"
                 if event_day is None:
-                    event_day = timestamp.date().isoformat()
-                    date_origin = "today_utc_only"
+                    # Authenticated, bounded API-Sports future-fixture discovery
+                    # happens in the native bridge with the same quota client.
+                    date_origin = "authenticated_api_sports_autodiscovery"
                 # Calls the original budget-limited cross-provider source join.
                 from betpilot_v3.real_prematch_bridge import execute as live_default
                 native_result = (live_runner or live_default)(SimpleNamespace(
@@ -212,11 +230,15 @@ def main(argv=None):
     p.add_argument("--fixture-index", type=Path,
                    default=_path(os.getenv("BETPILOT_FIXTURE_INDEX")))
     p.add_argument("--day-utc", help="Optional exact match day if multiple same-team fixtures")
+    p.add_argument("--sqlite-root", type=Path,
+                   default=_path(os.getenv("BETPILOT_SQLITE_ROOT")),
+                   help="Mounted read-only original PitchAPI SQLite archive tree")
     args = p.parse_args(argv)
     result = execute(args.request, output_dir=args.output_dir,
                      sources_root=args.sources_root, warehouse_root=args.warehouse_root,
                      history_root=args.history_root, team_stats_root=args.team_stats_root,
-                     fixture_index=args.fixture_index, day_utc=args.day_utc)
+                     fixture_index=args.fixture_index, day_utc=args.day_utc,
+                     sqlite_root=args.sqlite_root)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result["status"] == "RESEARCH_REPORT_AVAILABLE" else 2
 

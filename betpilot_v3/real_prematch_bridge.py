@@ -165,7 +165,7 @@ def execute(args, *, odds_run=None, client_factory=None,
         if odds_run is None:
             quote_dir.mkdir(parents=True, exist_ok=True)
         client = (client_factory or QuotaClient)(
-            os.environ["APISPORTS_KEY"], reserve=20, max_calls=3)
+            os.environ["APISPORTS_KEY"], reserve=20, max_calls=4)
         if odds_run is not None:
             # Compatibility with pre-existing deterministic Phase 1 smoke mocks;
             # production does not use this country-specific path.
@@ -179,20 +179,28 @@ def execute(args, *, odds_run=None, client_factory=None,
             evidence = None
         else:
             client.preflight()
+            day = args.day_utc
+            auto = None
+            if day is None:
+                from betpilot_v3.fixture_autodiscovery import next_fixture
+                auto = next_fixture(client, args.request)
+                day = auto['day_utc']
             fixture, row = fixture_from_api(
-                client, args.request, args.day_utc,
-                league_id=getattr(args, 'api_league_id', None),
-                season=getattr(args, 'api_season', None),
-                fixture_id=getattr(args, 'api_fixture_id', None))
+                client, args.request, day,
+                league_id=auto['api_league_id'] if auto else getattr(args, 'api_league_id', None),
+                season=auto['api_season'] if auto else getattr(args, 'api_season', None),
+                fixture_id=auto['api_fixture_id'] if auto else getattr(args, 'api_fixture_id', None))
             original_quote, evidence = acquire_original_quote(client, fixture, row)
             write(quote_dir / "RC15_EVENT_INPUT.json", original_quote)
             write(quote_dir / "API_FOOTBALL_FIXTURE_EVIDENCE.json", evidence)
             result["api_football_billable_calls"] = client.used
+        if odds_run is None:
+            result['discovered_fixture_day_utc'] = day
         # Existing original PitchAPI publisher runs only after verified quote
         # capture. The resulting source cutoff is at least as recent as quotes.
         phase_root = out / "phase1"
         phase_args = SimpleNamespace(
-            output_dir=phase_root, request=args.request, day_utc=args.day_utc,
+            output_dir=phase_root, request=args.request, day_utc=(day if odds_run is None else args.day_utc),
             country_code=getattr(args, 'country_code', None),
             competition=getattr(args, 'competition', None),
             warehouse_root=Path(args.warehouse_root),
