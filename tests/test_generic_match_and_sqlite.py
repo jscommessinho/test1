@@ -170,6 +170,8 @@ class TestAmbiguousClubName(unittest.TestCase):
                                now=NOW,live_runner=fake_live)
             self.assertEqual(captured[0].country_code,'ITA')
             self.assertEqual(result['country_hint'],'ITA')
+            # Source access must be visible despite a later odds/fixture block.
+            self.assertEqual(result['pitchapi_sqlite_archives_found'], 1)
 
     def test_one_team_cannot_identify_arbitrary_duplicate_name(self):
         from betpilot_v3.general_fixture import team
