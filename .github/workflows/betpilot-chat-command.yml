@@ -24,7 +24,7 @@ jobs:
       - name: Checkout the SHA-verified original-engine recovery, never untrusted issue code
         uses: actions/checkout@v4
         with:
-          ref: 89484ce09af91863f5505d601be7c2e265c97944
+          ref: 15c739b3e73f9fc1a1380e78c2a061dd839f0573
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
