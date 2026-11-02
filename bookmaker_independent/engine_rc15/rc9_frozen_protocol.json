@@ -1,0 +1,41 @@
+{
+  "version": "BETPILOT_RC9_FREEZE_2026-10-30",
+  "test_source_max_date": "2026-10-21",
+  "frozen_preprocessing": "RC8 proportionally de-vig by market; Poisson-DC BISE fit from 1X2 + O2.5; GG market price excluded from BISE",
+  "model_fit_through_year": 2024,
+  "frozen_model": {
+    "market": {
+      "coefficients": [
+        0.7924667708621855
+      ],
+      "intercept": 0.055269687842589864,
+      "fit_n": 346904,
+      "cutoff_year": 2024
+    },
+    "market_gap": {
+      "coefficients": [
+        0.8127303885061719,
+        0.11685631056426961
+      ],
+      "intercept": 0.028149106591951727,
+      "fit_n": 346904,
+      "cutoff_year": 2024
+    }
+  },
+  "required_prediction_fields": [
+    "event_id",
+    "match_day",
+    "league",
+    "p_btts",
+    "p_bise"
+  ],
+  "required_result_fields": [
+    "gg_real"
+  ],
+  "caveats": [
+    "User-verified source Bet365 closing, no independent per-market timestamps",
+    "20min snapshot universe may introduce match-selection bias",
+    "Only fixtures dated AFTER 2026-10-21 qualify as fresh prospective fixtures",
+    "No parameter adjustments within prospective evaluation; use file version change if updated"
+  ]
+}
