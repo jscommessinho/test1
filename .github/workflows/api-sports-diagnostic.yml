@@ -51,6 +51,34 @@ jobs:
                           elif isinstance(result.get('response'),list):
                               audit['status']='TEAM_QUERY_SUCCESS'
                               audit['team_entries_count']=len(result['response'])
+                              candidates=[x['team']['id'] for x in result['response']
+                                          if isinstance(x,dict)
+                                          and isinstance(x.get('team'),dict)
+                                          and x['team'].get('name')=='Juventus'
+                                          and x['team'].get('country')=='Italy'
+                                          and isinstance(x['team'].get('id'),int)]
+                              audit['unique_exact_italy_team']=len(set(candidates))==1
+                              if len(set(candidates))==1 and remaining>21:
+                                  audit['billable_queries']=2
+                                  try:
+                                      fixtures=request('/fixtures?team='+str(candidates[0])+'&next=50&timezone=UTC')
+                                      errors=fixtures.get('errors')
+                                      if errors:
+                                          audit['fixture_status']='PROVIDER_ERRORS'
+                                          keys=errors.keys() if isinstance(errors,dict) else []
+                                          audit['api_error_categories']=[str(k) for k in keys if k in allowed]
+                                          audit['api_other_errors_present']=bool(errors) and not bool(audit['api_error_categories'])
+                                      elif isinstance(fixtures.get('response'),list):
+                                          audit['fixture_status']='FIXTURE_QUERY_SUCCESS'
+                                          audit['fixture_entries_count']=len(fixtures['response'])
+                                      else:
+                                          audit['fixture_status']='FIXTURE_RESPONSE_INVALID'
+                                  except HTTPError as e:
+                                      audit['fixture_status']='FIXTURE_HTTP_REJECTED'
+                                      audit['http_code']=e.code
+                                  except (URLError,TimeoutError,ValueError,TypeError):
+                                      audit['fixture_status']='FIXTURE_TRANSPORT_ERROR'
+
                           else:
                               audit['status']='UNKNOWN_RESPONSE_FORMAT'
                       except HTTPError as e:
@@ -78,7 +106,11 @@ jobs:
               status:String(r.status||'UNKNOWN').slice(0,70),
               credential_present:r.credential_present===true,
               daily_remaining:Number.isInteger(r.daily_remaining)?r.daily_remaining:null,
-              billable_queries:Math.min(1,Number(r.billable_queries)||0),
+              billable_queries:Math.min(2,Number(r.billable_queries)||0),
+              fixture_status: typeof r.fixture_status === 'string' ? r.fixture_status.slice(0,80) : null,
+              api_other_errors_present:r.api_other_errors_present === true,
+              unique_exact_italy_team:r.unique_exact_italy_team === true,
+              fixture_entries_count:Number.isInteger(r.fixture_entries_count)?r.fixture_entries_count:null,
               api_error_categories:Array.isArray(r.api_error_categories)?r.api_error_categories.slice(0,10):[],
               http_code:[400,401,403,404,429,500,502,503].includes(r.http_code)?r.http_code:null,
               team_entries_count:Number.isInteger(r.team_entries_count)?r.team_entries_count:null,
