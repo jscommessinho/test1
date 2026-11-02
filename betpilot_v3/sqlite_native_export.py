@@ -28,6 +28,11 @@ from betpilot_v3.sqlite_source import _files
 
 SCHEMA='BETPILOT_SQLITE_PITCHAPI_NATIVE_SOURCE_V1'
 ALLOWED={'eng-premier','ita-seriea','fra-ligue1','esp-laliga','ger-bundesliga'}
+PIN_NAMES={'eng-premier':('Premier League','ENG',('Premier League',)),
+           'ita-seriea':('Serie A','ITA',('Serie A',)),
+           'fra-ligue1':('Ligue 1','FRA',('Ligue 1',)),
+           'esp-laliga':('LaLiga','ESP',('La Liga','LaLiga')),
+           'ger-bundesliga':('Bundesliga','GER',('Bundesliga',))}
 
 class SourceError(ValueError):
     def __init__(self,code):
@@ -71,6 +76,18 @@ def convert(sqlite_root,history_root,team_stats_root,*,cutoff=None,repo_root=Non
     if now.tzinfo is None:raise SourceError('CUTOFF_NOT_UTC_AWARE')
     now=now.astimezone(timezone.utc)
     validate=validator or verified_original_validator(repo_root)
+    root=Path(repo_root or Path(__file__).resolve().parents[1])
+    pins=json.loads((root/'data/pitchapi/league_pins_77.json').read_text('utf8'))
+    if pins.get('schema')!='BETPILOT_PITCHAPI_LEAGUE_PINNED_77_v1':
+        raise SourceError('PINNED_PITCHAPI_REGISTRY_INVALID')
+    trusted={}
+    for slug,(name,country,allowed_aliases) in PIN_NAMES.items():
+        ids={v.get('league_id') for v in pins['leagues'].values()
+             if v.get('league_name')==name and v.get('country_code')==country}
+        if len(ids)!=1 or not next(iter(ids)).startswith('l_'):
+            raise SourceError('PINNED_PITCHAPI_LEAGUE_NOT_UNIQUE')
+        trusted[slug]={'id':next(iter(ids)),'name':name,'country':country,
+                       'allowed_source_aliases':allowed_aliases}
     cutoff_day=now.date()
     histories=defaultdict(dict);stats=defaultdict(dict);leagues={}
     counters=Counter();digests=defaultdict(set)
@@ -86,9 +103,18 @@ def convert(sqlite_root,history_root,team_stats_root,*,cutoff=None,repo_root=Non
             if not {'source_responses','fixtures','teams','leagues'} <= tables:
                 raise SourceError('ORIGINAL_SOURCE_TABLES_MISSING')
             info=c.execute('SELECT pitchapi_league_id,name,country_code FROM leagues WHERE slug=?',(slug,)).fetchone()
-            if not info or not all(isinstance(info[k],str) and info[k] for k in info.keys()):
-                raise SourceError('ORIGINAL_LEAGUE_ID_MISSING')
-            meta={'id':info['pitchapi_league_id'],'name':info['name'],'country':info['country_code']}
+            if not info:
+                raise SourceError('ORIGINAL_LEAGUE_METADATA_MISSING')
+            pin=trusted[slug]
+            # Older v4 seasonal SQLite files may leave league ID NULL and keep
+            # the provider ID only in the separately verified PitchAPI catalogue.
+            # The independent PitchAPI 77-league registry resolves this *only*
+            # under an exact country and explicit published source-name alias.
+            if info['country_code']!=pin['country'] or info['name'] not in pin['allowed_source_aliases']:
+                raise SourceError('ORIGINAL_LEAGUE_REGISTRY_CONFLICT')
+            if info['pitchapi_league_id'] not in (None,'',pin['id']):
+                raise SourceError('ORIGINAL_LEAGUE_PROVIDER_ID_CONFLICT')
+            meta={'id':pin['id'],'name':pin['name'],'country':pin['country']}
             if slug in leagues and leagues[slug]!=meta:
                 raise SourceError('CONFLICTING_ORIGINAL_LEAGUE_IDENTITIES')
             leagues[slug]=meta
@@ -212,6 +238,7 @@ def convert(sqlite_root,history_root,team_stats_root,*,cutoff=None,repo_root=Non
     return {'schema':SCHEMA,'status':'PITCHAPI_SQLITE_NATIVE_INPUTS_MATERIALIZED',
             'source':'ORIGINAL_PRIVATE_SQLITE_READ_ONLY',
             'model_formulas_changed':False,'xg_from_team_stats_not_shot_reconstruction':True,
+            'league_id_source':'VERIFIED_ORIGINAL_PITCHAPI_77_LEAGUE_REGISTRY',
             'not_historically_captured_prematch':True,'leagues':sorted(leagues),
             'history_records':{k:len(v) for k,v in histories.items()},
             'raw_response_hashes_verified':sum(len(x) for x in digests.values()),
