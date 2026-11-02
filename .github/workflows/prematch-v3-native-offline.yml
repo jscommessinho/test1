@@ -38,6 +38,24 @@ jobs:
           print('FULL_NATIVE_SYNTHETIC_AUDIT_EXISTS', j.get('schema'))
           print('This is NOT a real Deportivo-Osasuna betting prediction.')
           PY
+      - name: Execute the exact Deportivo - Osasuna command without secrets; verify NO fabricated outcome
+        run: |
+          set +e
+          env -u PITCHAPI_API_KEY -u APISPORTS_KEY python -m betpilot_v3.command "BETPILOT: Deportivo La Coruña - Osasuna" --output-dir output/acceptance_deportivo > /dev/null
+          rc=$?
+          set -e
+          test "$rc" -eq 2
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('output/acceptance_deportivo/BETPILOT_STATUS.json').read_text('utf8'))
+          assert p['status']=='AUTHENTICATION_ERROR', p
+          assert p['reason_code']=='MISSING_PROVIDER_CREDENTIALS', p
+          assert not p['real_fixture_analysis_confirmed'], p
+          assert not p['five_engines_verified'], p
+          assert p.get('decision') is None, p
+          print('DEPORTIVO_COMMAND_EXECUTED: FAIL_CLOSED_NO_REAL_DATA')
+          PY
       - name: Archive synthetic evidence (no private fixtures or credentials)
         if: always()
         uses: actions/upload-artifact@v4
