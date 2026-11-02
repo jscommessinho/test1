@@ -71,8 +71,8 @@ class OneCommandTests(unittest.TestCase):
                            warehouse_root=root/"warehouse",history_root=root/"history",
                            fixture_index=None,live_runner=fake_run,now=NOW)
             self.assertEqual(len(seen),1)
-            self.assertEqual(seen[0].day_utc,"2026-11-02")
-            self.assertEqual(result["date_selection"],"today_utc_only")
+            self.assertIsNone(seen[0].day_utc)
+            self.assertEqual(result["date_selection"],"authenticated_api_sports_autodiscovery")
             self.assertEqual(result["status"],"NO_BET_DATA_OR_INTEGRATION_BLOCKED")
             self.assertFalse(result["five_engines_verified"])
 
