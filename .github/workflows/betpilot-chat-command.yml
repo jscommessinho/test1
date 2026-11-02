@@ -19,11 +19,12 @@ jobs:
       BETPILOT_WAREHOUSE_ROOT: ${{ github.workspace }}/warehouse
       BETPILOT_HISTORY_ROOT: ${{ github.workspace }}/history
       BETPILOT_SOURCES_ROOT: ${{ github.workspace }}/verified_bundles
+      BETPILOT_SQLITE_ROOT: ${{ github.workspace }}/private_pitchapi/data
     steps:
       - name: Checkout the SHA-verified original-engine recovery, never untrusted issue code
         uses: actions/checkout@v4
         with:
-          ref: 9ceee66e32d972422019eb826b2f843f795ff2a0
+          ref: fda34cfa980b766fea7f7a8e195f64fef4e717f9
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
@@ -31,6 +32,15 @@ jobs:
           cache: pip
       - name: Install original pinned numerical runtime
         run: python -m pip install --disable-pip-version-check -r requirements.txt
+      - name: Mount original PitchAPI seasonal SQLite data if authorized
+        env:
+          PITCHAPI_SOURCE_READ_TOKEN: ${{ secrets.PITCHAPI_SOURCE_READ_TOKEN }}
+        run: |
+          if [ -n "$PITCHAPI_SOURCE_READ_TOKEN" ]; then
+            python -m betpilot_v3.private_sqlite_mount --output private_pitchapi --seasons 2
+          else
+            echo 'PRIVATE_SQLITE_MOUNT_UNAVAILABLE: source read access not configured'
+          fi
       - name: Execute exact title as a subprocess argument, no shell injection or raw API response logs
         env:
           PITCHAPI_API_KEY: ${{ secrets.PITCHAPI_API_KEY }}
@@ -78,6 +88,8 @@ jobs:
               real_fixture_analysis_confirmed: result.real_fixture_analysis_confirmed === true,
               decision: result.real_fixture_analysis_confirmed === true ? result.decision : 'NO BET / NO VERIFIED REAL REPORT',
               timing_ms: result.timing_ms?.total ?? null,
+              date_selection: String(result.date_selection || 'NONE').slice(0,80),
+              sqlite_archives_found: Number(result.pitchapi_sqlite_archives_found || 0),
               source: 'PitchAPI historical warehouse + API-Sports Bet365 only',
               disclaimer: 'Offline software tests are not real-match prediction validation.'
             };
