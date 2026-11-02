@@ -120,3 +120,25 @@ jobs:
           print('ORIGINAL_PITCHAPI_DATASETS',sorted(datasets))
           print('Original archive rows were counted in read-only mode, not exported')
           PY
+
+      - name: Inspect stat keys and raw PitchAPI stats shape without logging values or IDs
+        if: steps.condition.outputs.ready == 'true'
+        run: |
+          python - <<'PY'
+          import gzip,json,sqlite3
+          from pathlib import Path
+          from urllib.parse import quote
+          p=next(Path('private_pitchapi/data').glob('*/*.sqlite'))
+          con=sqlite3.connect('file:'+quote(str(p.resolve()),safe='/')+'?mode=ro',uri=True)
+          con.execute('PRAGMA query_only=ON')
+          keys=[r[0] for r in con.execute("SELECT DISTINCT metric_key FROM match_team_stats ORDER BY metric_key")]
+          print('PITCHAPI_TEAM_METRIC_KEYS',keys)
+          rows=con.execute("SELECT body_gzip FROM source_responses WHERE dataset='stats' AND body_gzip IS NOT NULL ORDER BY response_id DESC LIMIT 1").fetchone()
+          if rows:
+            obj=json.loads(gzip.decompress(rows[0]).decode('utf8'))
+            print('PITCHAPI_STATS_RAW_TOP_LEVEL_KEYS',sorted(obj.keys()) if isinstance(obj,dict) else type(obj).__name__)
+            if isinstance(obj,dict):
+              print('PITCHAPI_STATS_RAW_PERIOD_TYPES',[str(x.get('period')) for x in obj.get('periods',[]) if isinstance(x,dict)])
+              print('PITCHAPI_STATS_RAW_HAS_HOME_AWAY',isinstance(obj.get('home_team'),dict),isinstance(obj.get('away_team'),dict))
+          con.close()
+          PY
