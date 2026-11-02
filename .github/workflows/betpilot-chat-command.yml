@@ -36,9 +36,16 @@ jobs:
         env:
           PITCHAPI_SOURCE_READ_TOKEN: ${{ secrets.PITCHAPI_SOURCE_READ_TOKEN }}
         run: |
+          mkdir -p output
           if [ -n "$PITCHAPI_SOURCE_READ_TOKEN" ]; then
-            python -m betpilot_v3.private_sqlite_mount --output private_pitchapi --seasons 2
+            if python -m betpilot_v3.private_sqlite_mount --output private_pitchapi --seasons 2; then
+              printf '%s\n' '{"status":"READ_ONLY_SOURCE_MOUNTED"}' > output/source_mount_status.json
+            else
+              printf '%s\n' '{"status":"READ_ONLY_SOURCE_MOUNT_FAILED"}' > output/source_mount_status.json
+              echo 'PRIVATE_SQLITE_MOUNT_FAILED: authorized read-only import did not complete'
+            fi
           else
+            printf '%s\n' '{"status":"SOURCE_READ_TOKEN_MISSING"}' > output/source_mount_status.json
             echo 'PRIVATE_SQLITE_MOUNT_UNAVAILABLE: source read access not configured'
           fi
       - name: Execute exact title as a subprocess argument, no shell injection or raw API response logs
@@ -80,8 +87,18 @@ jobs:
             } catch (e) {
               result = {status:'INTEGRATION_ERROR',reason_code:'STATUS_FILE_UNAVAILABLE',real_fixture_analysis_confirmed:false};
             }
+            let source = {};
+            try {
+              source = JSON.parse(fs.readFileSync('output/source_mount_status.json','utf8'));
+            } catch (_) {
+              source = {status:'SOURCE_MOUNT_STATUS_NOT_AVAILABLE'};
+            }
+            const sourceMount = ['READ_ONLY_SOURCE_MOUNTED','READ_ONLY_SOURCE_MOUNT_FAILED',
+              'SOURCE_READ_TOKEN_MISSING','SOURCE_MOUNT_STATUS_NOT_AVAILABLE'].includes(source.status)
+              ? source.status : 'SOURCE_MOUNT_STATUS_NOT_AVAILABLE';
             const status = {
               request: context.payload.issue.title,
+              private_pitchapi_source: sourceMount,
               status: String(result.status || 'UNKNOWN').slice(0,70),
               reason_code: String(result.reason_code || 'NONE').slice(0,100),
               diagnostic: (['daily reserved API quota reached; abstaining','daily quota reserve or per-run cap reached','provider error, quota or parameters rejected','provider connection/data error','cannot verify API daily quota: refusing billable request'].includes(result.reason) ? result.reason : (/^provider HTTP [0-9]{3}$/.test(String(result.reason)) ? String(result.reason) : 'NOT_PUBLICLY_CLASSIFIED')),
