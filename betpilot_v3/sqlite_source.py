@@ -126,3 +126,40 @@ def main(argv=None):
 
 if __name__=='__main__':
     raise SystemExit(main())
+
+
+def common_competition_country(root: Path, request: str):
+    """Original SQLite-only shared league country hint for disambiguation.
+
+    Both clubs must have actual original fixture memberships in a common
+    competition, with only one candidate country across such competitions.
+    This proves no future fixture or bookmaker ID and is never used as one.
+    """
+    home, away = parse_request(request)
+    desired={team(home),team(away)}
+    if len(desired)!=2:return None
+    found=set()
+    for path in _files(Path(root)):
+        uri='file:'+quote(str(path.resolve()),safe='/')+'?mode=ro'
+        try:
+            with closing(sqlite3.connect(uri,uri=True,timeout=2)) as con:
+                con.execute('PRAGMA query_only=ON')
+                tables={r[0] for r in con.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('fixtures','teams','leagues')")}
+                if tables!={'fixtures','teams','leagues'}:continue
+                member={}
+                rows=con.execute('''
+                    SELECT f.league_slug,l.country_code,t.team_name
+                      FROM fixtures f
+                      JOIN leagues l ON l.slug=f.league_slug
+                      JOIN teams t ON t.pitchapi_team_id IN (f.home_team_id,f.away_team_id)
+                ''')
+                for slug,country,label in rows:
+                    name=team(label)
+                    if name in desired and country:
+                        member.setdefault((slug,country),set()).add(name)
+                found.update(key for key,members in member.items() if members==desired)
+        except sqlite3.DatabaseError as exc:
+            raise SqliteSourceError('SQLITE_ARCHIVE_INVALID',path.name) from exc
+    countries={country for slug,country in found}
+    return next(iter(countries)) if len(countries)==1 else None

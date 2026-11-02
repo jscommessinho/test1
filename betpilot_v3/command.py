@@ -208,10 +208,16 @@ def execute(request, *, output_dir: Path, sources_root: Path | None = None,
                         # Authenticated, bounded API-Sports future-fixture discovery
                         # happens in the native bridge with the same quota client.
                         date_origin = "authenticated_api_sports_autodiscovery"
+                    verified_country = None
+                    if sqlite_root is not None and Path(sqlite_root).is_dir():
+                        from betpilot_v3.sqlite_source import common_competition_country
+                        verified_country = common_competition_country(sqlite_root, request)
+                    if verified_country:
+                        result['country_hint'] = verified_country
                     # Calls the original budget-limited cross-provider source join.
                     from betpilot_v3.real_prematch_bridge import execute as live_default
                     native_result = (live_runner or live_default)(SimpleNamespace(
-                        request=request, day_utc=event_day, country_code=None,
+                        request=request, day_utc=event_day, country_code=verified_country,
                         competition=None, api_league_id=None, api_season=None,
                         api_fixture_id=None, warehouse_root=Path(warehouse_root),
                         history_root=Path(history_root), team_stats_root=team_stats_root,

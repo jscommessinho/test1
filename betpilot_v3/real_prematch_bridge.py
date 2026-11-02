@@ -183,7 +183,8 @@ def execute(args, *, odds_run=None, client_factory=None,
             auto = None
             if day is None:
                 from betpilot_v3.fixture_autodiscovery import next_fixture
-                auto = next_fixture(client, args.request)
+                auto = next_fixture(client, args.request,
+                                    country_code=getattr(args, "country_code", None))
                 day = auto['day_utc']
             fixture, row = fixture_from_api(
                 client, args.request, day,

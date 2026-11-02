@@ -8,7 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from betpilot_v3.command import execute
-from betpilot_v3.sqlite_source import select_fixture, match_candidates, SqliteSourceError
+from betpilot_v3.sqlite_source import select_fixture, match_candidates, common_competition_country, SqliteSourceError
 from betpilot_v3.fixture_autodiscovery import next_fixture
 from betpilot_v3.pitchapi_preflight import PreflightBlocked
 
@@ -55,6 +55,12 @@ class TestSqliteSource(unittest.TestCase):
             before=hashlib.sha256(db.read_bytes()).hexdigest()
             select_fixture(Path(td),'BETPILOT: Juventus - Napoli',now=NOW)
             self.assertEqual(before,hashlib.sha256(db.read_bytes()).hexdigest())
+    def test_original_sqlite_country_hint_only_from_both_club_memberships(self):
+        with tempfile.TemporaryDirectory() as td:
+            make_db(td,teams=('Inter','AC Milan'),status='finished')
+            self.assertEqual(common_competition_country(Path(td),'BETPILOT: Inter - Milan'),'ITA')
+            self.assertIsNone(common_competition_country(Path(td),'BETPILOT: Roma - Lazio'))
+
     def test_empty_catalogue_not_fabricated(self):
         with tempfile.TemporaryDirectory() as td:
             p=Path(td)/'catalogue.sqlite'
@@ -128,6 +134,43 @@ class TestAmbiguousClubName(unittest.TestCase):
         self.assertEqual(result['api_fixture_id'],12001)
         self.assertEqual(result['disambiguation'],'AWAY_TEAM_EXACT_ID')
         self.assertEqual([p for p,_ in client.calls],['/teams','/teams','/fixtures'])
+    def test_authenticated_country_disambiguates_same_name_clubs(self):
+        class ClubClient:
+            def __init__(self):self.calls=[]
+            def get(self,path,**params):
+                self.calls.append((path,params))
+                if path=='/teams':
+                    self.asserted=False
+                    return {'response':[{'team':{'id':505,'name':'Inter','country':'Italy'}},
+                                        {'team':{'id':777,'name':'Inter','country':'Brazil'}}]}
+                if path=='/fixtures':
+                    assert params['team']==505
+                    return {'paging':{'total':1},'response':[{'fixture':{'id':12001,
+                       'date':'2026-11-10T20:00:00+00:00','status':{'short':'NS'}},
+                       'teams':{'home':{'id':505,'name':'Inter'},'away':{'id':489,'name':'AC Milan'}},
+                       'league':{'id':135,'season':2026}}]}
+                raise AssertionError((path,params))
+        client=ClubClient()
+        row=next_fixture(client,'BETPILOT: Inter - Milan',now=NOW,country_code='ITA')
+        self.assertEqual(row['api_fixture_id'],12001)
+        self.assertEqual(len(client.calls),2)
+
+    def test_country_hint_is_passed_to_external_bridge(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);wh=root/'warehouse';hist=root/'history';db=root/'db'
+            for p in (wh,hist,db):p.mkdir()
+            make_db(db,teams=('Inter','AC Milan'),status='finished')
+            captured=[]
+            def fake_live(args):
+                captured.append(args)
+                return {'status':'NO_BET_PREMATCH_CHAIN_BLOCKED','reason_code':'NO_AUTHENTIC_BET365_ODDS'}
+            with patch.dict(os.environ,{'PITCHAPI_API_KEY':'test-secret','APISPORTS_KEY':'test-secret'}):
+                result=execute('BETPILOT: Inter - Milan',output_dir=root/'out',
+                               warehouse_root=wh,history_root=hist,sqlite_root=db,
+                               now=NOW,live_runner=fake_live)
+            self.assertEqual(captured[0].country_code,'ITA')
+            self.assertEqual(result['country_hint'],'ITA')
+
     def test_one_team_cannot_identify_arbitrary_duplicate_name(self):
         from betpilot_v3.general_fixture import team
         self.assertEqual(team('Internazionale'),team('Inter'))

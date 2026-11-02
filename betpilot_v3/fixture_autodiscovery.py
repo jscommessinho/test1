@@ -10,7 +10,7 @@ from betpilot_v3.general_fixture import team
 from betpilot_v3.pitchapi_preflight import PreflightBlocked, instant, require
 
 
-def _teams(response, requested):
+def _teams(response, requested, country_code=None):
     entries=response.get('response')
     require(isinstance(entries,list),'TEAM_SEARCH_INVALID','Invalid authorized team list')
     result=set()
@@ -18,6 +18,10 @@ def _teams(response, requested):
         obj=item.get('team') if isinstance(item,dict) else None
         if not isinstance(obj,dict) or team(obj.get('name'))!=team(requested):
             continue
+        if country_code is not None:
+            from betpilot_v3.general_fixture import countries_equal
+            if not countries_equal(country_code, obj.get('country')):
+                continue
         ident=obj.get('id')
         if isinstance(ident,int) and not isinstance(ident,bool) and ident>0:
             result.add(ident)
@@ -25,7 +29,7 @@ def _teams(response, requested):
     return result
 
 
-def next_fixture(client, request, *, now=None, next_count=50):
+def next_fixture(client, request, *, now=None, next_count=50, country_code=None):
     """Find a real exact home/away next fixture with provider-ID cross-checks.
 
     Unambiguous home: two API calls. Ambiguous home: search the away club and
@@ -35,7 +39,7 @@ def next_fixture(client, request, *, now=None, next_count=50):
     home, away = parse_request(request)
     now = now or datetime.now(timezone.utc)
     require(1<=next_count<=50,'FIXTURE_QUERY_INVALID','Invalid search horizon')
-    home_ids=_teams(client.get('/teams',search=home),home)
+    home_ids=_teams(client.get('/teams',search=home),home,country_code)
     require(bool(home_ids),'HOME_TEAM_MISSING_OR_AMBIGUOUS',
             'Home team not found with a verified provider name')
     if len(home_ids)==1:
@@ -43,7 +47,7 @@ def next_fixture(client, request, *, now=None, next_count=50):
         away_ids=None
         side='home'
     else:
-        away_ids=_teams(client.get('/teams',search=away),away)
+        away_ids=_teams(client.get('/teams',search=away),away,country_code)
         require(len(away_ids)==1,'HOME_TEAM_MISSING_OR_AMBIGUOUS',
                 'Home label ambiguous; away side cannot uniquely disambiguate it')
         queried_id=next(iter(away_ids))
