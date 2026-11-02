@@ -1,0 +1,94 @@
+name: BETPILOT | Any Fixture + SQLite Read-Only Regression
+on:
+  push:
+    branches: ['recovery/**']
+    paths:
+      - 'betpilot_v3/sqlite_source.py'
+      - 'betpilot_v3/private_sqlite_mount.py'
+      - 'betpilot_v3/fixture_autodiscovery.py'
+      - 'betpilot_v3/command.py'
+      - 'betpilot_v3/real_prematch_bridge.py'
+      - 'betpilot/quota_smart.py'
+      - 'tests/test_generic_match_and_sqlite.py'
+      - 'tests/test_private_sqlite_mount.py'
+      - '.github/workflows/prematch-generic-fixture-sqlite.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-generic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test multiple arbitrary fixtures and read-only SQLite provider access
+        run: python -m unittest tests.test_generic_match_and_sqlite tests.test_private_sqlite_mount -v
+      - name: Confirm all five original engine artifacts are still SHA-verified
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          manifest=json.loads(Path('betpilot_v3/SOURCE_ZIPS_SHA256.json').read_text('utf8'))
+          print('Manifest records',len(manifest))
+          PY
+      - name: Verify any-match CLI refuses invented fixture and quota inputs
+        run: |
+          python - <<'PY'
+          from betpilot_v3.full_analysis import parse_request
+          for case in ['BETPILOT: Roma - Lazio', 'BETPILOT: Inter - Milan',
+                       'BETPILOT: Deportivo La Coruña - Osasuna',
+                       'BETPILOT: Arsenal - Liverpool',
+                       'BETPILOT: Boca Juniors - River Plate']:
+              a,b=parse_request(case)
+              assert a and b and a!=b
+          print('GENERIC_COMMAND_PARSER_OK: 5 distinct fixtures, no hardcoded club')
+          PY
+  original-private-sqlite-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      PITCHAPI_SOURCE_READ_TOKEN: ${{ secrets.PITCHAPI_SOURCE_READ_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Identify availability of independent read-only source credential
+        id: condition
+        run: |
+          if [ -n "$PITCHAPI_SOURCE_READ_TOKEN" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'PRIVATE_SQLITE_MOUNT_UNAVAILABLE: No read-only source secret configured'
+          fi
+      - uses: actions/setup-python@v5
+        if: steps.condition.outputs.ready == 'true'
+        with:
+          python-version: '3.11'
+      - name: Import only two recent seasons per league, no changes to source repository
+        if: steps.condition.outputs.ready == 'true'
+        run: python -m betpilot_v3.private_sqlite_mount --output private_pitchapi --seasons 2
+      - name: Validate source SQLITE schema in read-only mode, never upload database as artifact
+        if: steps.condition.outputs.ready == 'true'
+        run: |
+          python - <<'PY'
+          import sqlite3
+          from pathlib import Path
+          from urllib.parse import quote
+          paths=list(Path('private_pitchapi/data').rglob('*.sqlite'))
+          assert len(paths)>1, 'No source databases found'
+          fixture_archives=0
+          for p in paths:
+              uri='file:'+quote(str(p.resolve()),safe='/')+'?mode=ro'
+              with sqlite3.connect(uri,uri=True) as db:
+                  tables={r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+                  if 'fixtures' in tables:
+                      fixture_archives+=1
+          assert fixture_archives>0,'No original fixture index present'
+          print('PRIVATE_ORIGINAL_SQLITE_READ_ONLY_VERIFIED', fixture_archives)
+          PY

@@ -107,7 +107,7 @@ class QuotaClient:
         return {'quota_limit':limit,'quota_remaining_at_start':self.remaining,'reserve':self.reserve}
 
     def get(self,path,**params):
-        if path not in ('/fixtures','/odds'):raise BudgetError('endpoint not allowlisted')
+        if path not in ('/fixtures','/odds','/teams'):raise BudgetError('endpoint not allowlisted')
         if self.remaining is None:raise BudgetError('/status quota check required')
         if self.used>=self.max_calls or self.remaining<=self.reserve:
             raise BudgetError('daily quota reserve or per-run cap reached')

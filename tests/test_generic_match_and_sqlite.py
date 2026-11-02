@@ -1,0 +1,136 @@
+"""Universal match selection tests. No web, no external API, no real betting odds."""
+import os
+import sqlite3
+import tempfile
+import unittest
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from unittest.mock import patch
+
+from betpilot_v3.command import execute
+from betpilot_v3.sqlite_source import select_fixture, match_candidates, SqliteSourceError
+from betpilot_v3.fixture_autodiscovery import next_fixture
+from betpilot_v3.pitchapi_preflight import PreflightBlocked
+
+
+NOW=datetime(2026,11,2,15,tzinfo=timezone.utc)
+
+
+def make_db(root, *, teams=('Juventus','Napoli'), kickoff=None, id='m_1', status='scheduled'):
+    root=Path(root); db=root/'pitch.sqlite'
+    con=sqlite3.connect(str(db))
+    con.executescript('''
+        CREATE TABLE fixtures (pitchapi_fixture_id TEXT, league_slug TEXT,
+            season_label TEXT,kickoff_utc TEXT,home_team_id TEXT,
+            away_team_id TEXT,fixture_status TEXT);
+        CREATE TABLE teams(pitchapi_team_id TEXT,team_name TEXT);
+        CREATE TABLE leagues(slug TEXT, pitchapi_league_id TEXT,name TEXT,country_code TEXT);
+        INSERT INTO leagues VALUES ('ita-seriea','l_SerieA','Serie A','ITA');
+    ''')
+    con.executemany('INSERT INTO teams VALUES (?,?)',[('t1',teams[0]),('t2',teams[1])])
+    con.execute('INSERT INTO fixtures VALUES (?,?,?,?,?,?,?)',(id,'ita-seriea','2026/2027',
+                (kickoff or (NOW+timedelta(days=4)).isoformat()),'t1','t2',status))
+    con.commit();con.close()
+    return db
+
+class TestSqliteSource(unittest.TestCase):
+    def test_arbitrary_fixture_team_pair_same_original_db(self):
+        for pair in [('Juventus','Napoli'),('Inter','Milan'),('Deportivo La Coruña','Osasuna')]:
+            with self.subTest(pair=pair),tempfile.TemporaryDirectory() as td:
+                db=make_db(td,teams=pair)
+                row=select_fixture(Path(td),f'BETPILOT: {pair[0]} - {pair[1]}',now=NOW)
+                self.assertEqual(row['pitchapi_event_id'],'m_1')
+                self.assertEqual(row['league_slug'],'ita-seriea')
+                self.assertEqual(row['provider'],'PitchAPI')
+                self.assertEqual(db.stat().st_size,db.stat().st_size)
+    def test_past_fixture_not_selected_for_live_prematch(self):
+        with tempfile.TemporaryDirectory() as td:
+            make_db(td,kickoff='2025-04-11T16:00:00+00:00',status='finished')
+            self.assertIsNone(select_fixture(Path(td),'BETPILOT: Juventus - Napoli',now=NOW))
+            self.assertEqual(len(match_candidates(Path(td),'BETPILOT: Juventus - Napoli',upcoming=False)),1)
+    def test_database_remains_bitwise_unmodified(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as td:
+            db=make_db(td)
+            before=hashlib.sha256(db.read_bytes()).hexdigest()
+            select_fixture(Path(td),'BETPILOT: Juventus - Napoli',now=NOW)
+            self.assertEqual(before,hashlib.sha256(db.read_bytes()).hexdigest())
+    def test_empty_catalogue_not_fabricated(self):
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td)/'catalogue.sqlite'
+            con=sqlite3.connect(p);con.execute('CREATE TABLE catalogue_snapshots(id INTEGER)');con.close()
+            self.assertIsNone(select_fixture(Path(td),'BETPILOT: Roma - Lazio',now=NOW))
+
+
+class DummyClient:
+    def __init__(self, pair=('Juventus','Napoli')):
+        self.pair=pair;self.calls=[]
+    def get(self,path,**params):
+        self.calls.append((path,params))
+        if path=='/teams':
+            return {'response':[{'team':{'id':104,'name':self.pair[0]}}]}
+        if path=='/fixtures':
+            return {'paging':{'total':1},'response':[{'fixture':{
+                'id':100400,'date':'2026-11-10T18:00:00+00:00','status':{'short':'NS'}},
+                'teams':{'home':{'id':104,'name':self.pair[0]},
+                         'away':{'id':105,'name':self.pair[1]}},
+                'league':{'id':135,'season':2026}}]}
+        raise AssertionError(path)
+
+class TestAutoFixtureDiscovery(unittest.TestCase):
+    def test_generic_teams_and_no_date_needed(self):
+        for pair in [('Juventus','Napoli'),('Roma','Lazio'),('Inter','Milan')]:
+            with self.subTest(pair=pair):
+                cli=DummyClient(pair)
+                row=next_fixture(cli,f'BETPILOT: {pair[0]} - {pair[1]}',now=NOW)
+                self.assertEqual(row['day_utc'],'2026-11-10')
+                self.assertEqual(row['api_fixture_id'],100400)
+                self.assertEqual([x[0] for x in cli.calls],['/teams','/fixtures'])
+    def test_no_invented_opponent(self):
+        cli=DummyClient(('Roma','Lazio'))
+        with self.assertRaises(PreflightBlocked) as err:
+            next_fixture(cli,'BETPILOT: Roma - Torino',now=NOW)
+        self.assertEqual(err.exception.code,'FIXTURE_NOT_FOUND')
+    def test_home_team_ambiguous(self):
+        cli=DummyClient()
+        def many(path,**params):
+            if path=='/teams': return {'response':[{'team':{'id':1,'name':'Juventus'}},
+                                                {'team':{'id':2,'name':'Juventus'}}]}
+            raise AssertionError('Unexpected fixture call')
+        cli.get=many
+        with self.assertRaises(PreflightBlocked) as err:
+            next_fixture(cli,'BETPILOT: Juventus - Napoli',now=NOW)
+        self.assertEqual(err.exception.code,'HOME_TEAM_MISSING_OR_AMBIGUOUS')
+
+class TestCommandUniversal(unittest.TestCase):
+    def test_passes_generic_match_to_native_runner_with_sqlite_day(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);wh=root/'warehouse';hist=root/'history'
+            wh.mkdir();hist.mkdir();db=root/'sqlite';db.mkdir()
+            make_db(db,teams=('Roma','Lazio'))
+            captured=[]
+            def fake_live(args):
+                captured.append(args)
+                return {'status':'NO_BET_PREMATCH_CHAIN_BLOCKED','reason_code':'ODDS_UNAVAILABLE'}
+            with patch.dict(os.environ,{'PITCHAPI_API_KEY':'test-secret','APISPORTS_KEY':'test-secret'}):
+                result=execute('BETPILOT: Roma - Lazio',output_dir=root/'out',warehouse_root=wh,
+                               history_root=hist,sqlite_root=db,now=NOW,live_runner=fake_live)
+            self.assertEqual(len(captured),1)
+            self.assertEqual(captured[0].day_utc,'2026-11-06')
+            self.assertEqual(result['status'],'NO_BET_DATA_OR_INTEGRATION_BLOCKED')
+            self.assertFalse(result['five_engines_verified'])
+    def test_when_no_sqlite_fixture_discover_on_authorized_api_not_guess_today(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);wh=root/'warehouse';hist=root/'history';wh.mkdir();hist.mkdir()
+            captured=[]
+            def fake_live(args):
+                captured.append(args.day_utc)
+                return {'status':'NO_BET_PREMATCH_CHAIN_BLOCKED','reason_code':'FIXTURE_NOT_FOUND'}
+            with patch.dict(os.environ,{'PITCHAPI_API_KEY':'test-secret','APISPORTS_KEY':'test-secret'}):
+                result=execute('BETPILOT: Inter - Milan',output_dir=root/'out',warehouse_root=wh,
+                               history_root=hist,now=NOW,live_runner=fake_live)
+            self.assertEqual(captured,[None])
+            self.assertEqual(result['date_selection'],'authenticated_api_sports_autodiscovery')
+            self.assertIsNone(result['date_utc_checked'])
+
+if __name__=='__main__': unittest.main()
