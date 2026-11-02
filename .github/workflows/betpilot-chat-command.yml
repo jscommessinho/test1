@@ -84,6 +84,7 @@ jobs:
               request: context.payload.issue.title,
               status: String(result.status || 'UNKNOWN').slice(0,70),
               reason_code: String(result.reason_code || 'NONE').slice(0,100),
+              diagnostic: (['daily reserved API quota reached; abstaining','daily quota reserve or per-run cap reached','provider error, quota or parameters rejected','provider connection/data error','cannot verify API daily quota: refusing billable request'].includes(result.reason) ? result.reason : (/^provider HTTP [0-9]{3}$/.test(String(result.reason)) ? String(result.reason) : 'NOT_PUBLICLY_CLASSIFIED')),
               five_engines_verified: result.five_engines_verified === true,
               real_fixture_analysis_confirmed: result.real_fixture_analysis_confirmed === true,
               decision: result.real_fixture_analysis_confirmed === true ? result.decision : 'NO BET / NO VERIFIED REAL REPORT',
