@@ -318,6 +318,14 @@ jobs:
                               report['ga3_executed']=run.get('ga3_status')=='GA3_ORIGINAL_RESEARCH_EXECUTED'
                               report['gts3_executed']=run.get('gts3_status')=='GTS3_ORIGINAL_RESEARCH_EXECUTED'
                               report['native_source_export']=run.get('status')=='PITCHAPI_NATIVE_FIVE_EXPORTS_VERIFIED'
+                              if report['native_source_export']:
+                                  native=pathlib.Path(run['native_bundle'])
+                                  ga3=json.loads((native/'ga3_native_output.json').read_text('utf8'))
+                                  gts3=json.loads((native/'gts3_native_output.json').read_text('utf8'))
+                                  report['ga3_prediction']=ga3.get('prediction')
+                                  report['gts3_predictions']=gts3.get('predictions')
+                                  report['ga3_research_only']=ga3.get('status')
+                                  report['gts3_research_only']=gts3.get('status')
           except Exception as exc:
               report['status']='PITCHAPI_LOOKUP_OR_NATIVE_STAGE_EXCEPTION'
               report['reason_code']=type(exc).__name__
