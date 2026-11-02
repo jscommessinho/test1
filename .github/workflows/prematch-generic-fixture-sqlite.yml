@@ -247,3 +247,79 @@ jobs:
                       evidence['reason_code']=type(exc).__name__
           print('ATALANTA_PARMA_REAL_PITCHAPI_ONLY',json.dumps(evidence,sort_keys=True))
           PY
+
+      - name: PitchAPI live league fixture lookup, then original GA3-GTS3 if match verified
+        if: steps.condition.outputs.ready == 'true'
+        env:
+          PITCHAPI_API_KEY: ${{ secrets.PITCHAPI_API_KEY }}
+        run: |
+          python - <<'PY'
+          import json,os,pathlib,subprocess,sys
+          from datetime import datetime,timezone
+          from types import SimpleNamespace
+          from betpilot.pitchapi_gts_probe import Client
+          from betpilot_v3.general_fixture import team
+          from betpilot_v3.pitchapi_preflight import instant
+          report={'source':'PITCHAPI_AUTHENTICATED_SEASON_FIXTURES',
+                  'request':'BETPILOT: Atalanta - Parma',
+                  'status':'NOT_CHECKED','ga3_executed':False,'gts3_executed':False}
+          try:
+              if not os.environ.get('PITCHAPI_API_KEY'):
+                  report['status']='PITCHAPI_KEY_MISSING'
+              else:
+                  pins=json.loads(pathlib.Path('data/pitchapi/league_pins_77.json').read_text('utf8'))
+                  league=pins['leagues']['ita-seriea']
+                  assert league['league_name']=='Serie A' and league['country_code']=='ITA'
+                  client=Client(os.environ['PITCHAPI_API_KEY'],budget=1,pause=0)
+                  data=client.get('/v1/leagues/'+league['league_id']+'/matches',
+                                  {'season':'2026/2027'})
+                  if (data.get('league') or {}).get('id')!=league['league_id'] or not isinstance(data.get('matches'),list):
+                      report['status']='PITCHAPI_LEAGUE_RESPONSE_INVALID'
+                  else:
+                      now=datetime.now(timezone.utc)
+                      fixture=[]
+                      for m in data['matches']:
+                          if not isinstance(m,dict):continue
+                          h=m.get('home_team') or {};a=m.get('away_team') or {}
+                          if team(h.get('name'))!='atalanta' or team(a.get('name'))!='parma':continue
+                          try: kick=instant(m.get('time_utc'))
+                          except ValueError:continue
+                          if kick>now and str(m.get('status','')).lower() not in ('finished','ft','played','live','in_progress'):
+                              fixture.append((kick,m))
+                      fixture.sort(key=lambda z:z[0])
+                      report['season_listing_count']=len(data['matches'])
+                      if not fixture:
+                          report['status']='NO_AUTHENTIC_UPCOMING_ATALANTA_PARMA_IN_SEASON_LIST'
+                      elif len(fixture)>1 and fixture[0][0]==fixture[1][0]:
+                          report['status']='AMBIGUOUS_AUTHENTIC_FIXTURE'
+                      else:
+                          kick,selected=fixture[0]
+                          report['kickoff_utc']=kick.isoformat()
+                          report['status']='PITCHAPI_UPCOMING_FIXTURE_IDENTIFIED'
+                          # Do not call bookmaker. Test native frozen engines only.
+                          pip=subprocess.run([sys.executable,'-m','pip','install','-r','requirements.txt'],
+                                             capture_output=True,text=True,timeout=90,check=False)
+                          if pip.returncode:
+                              report['status']='ORIGINAL_RUNTIME_DEPENDENCIES_NOT_INSTALLED'
+                          else:
+                              from betpilot_v3.pitchapi_native_phase1 import execute
+                              folder=pathlib.Path('/tmp/atalanta-parma-pitchapi-daily')
+                              folder.mkdir(exist_ok=True)
+                              run=execute(SimpleNamespace(
+                                  request='BETPILOT: Atalanta - Parma',
+                                  day_utc=kick.date().isoformat(),country_code='ITA',
+                                  competition='Serie A',warehouse_root=folder,
+                                  history_root=pathlib.Path('/tmp/betpilot-source-ga3'),
+                                  team_stats_root=pathlib.Path('/tmp/betpilot-source-gts3'),
+                                  team_stats_archive=None,
+                                  output_dir=pathlib.Path('/tmp/atalanta-parma-ga3-gts3')))
+                              report['status']=run.get('status')
+                              report['reason_code']=run.get('reason_code')
+                              report['ga3_executed']=run.get('ga3_status')=='GA3_ORIGINAL_RESEARCH_EXECUTED'
+                              report['gts3_executed']=run.get('gts3_status')=='GTS3_ORIGINAL_RESEARCH_EXECUTED'
+                              report['native_source_export']=run.get('status')=='PITCHAPI_NATIVE_FIVE_EXPORTS_VERIFIED'
+          except Exception as exc:
+              report['status']='PITCHAPI_LOOKUP_OR_NATIVE_STAGE_EXCEPTION'
+              report['reason_code']=type(exc).__name__
+          print('ATALANTA_PARMA_PITCHAPI_LIVE_GA3_GTS3',json.dumps(report,sort_keys=True))
+          PY
