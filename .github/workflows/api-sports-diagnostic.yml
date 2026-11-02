@@ -1,0 +1,91 @@
+name: BETPILOT | API-Sports restricted transport diagnostic
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+  issues: write
+jobs:
+  check:
+    if: github.event.issue.user.login == 'jscommessinho' && github.event.issue.title == 'BETPILOT API DIAGNOSTIC'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Inspect status and at most one authenticated team-query error category
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: |
+          python - <<'PY'
+          import json,os,pathlib
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError,URLError
+          output=pathlib.Path('diagnostic.json')
+          audit={'status':'NOT_STARTED','credential_present':bool(os.environ.get('APISPORTS_KEY')),
+                 'billable_queries':0,'api_error_categories':[],'http_code':None}
+          key=os.environ.get('APISPORTS_KEY')
+          if not key:
+              audit['status']='KEY_UNAVAILABLE'
+          else:
+              def request(endpoint):
+                  req=Request('https://v3.football.api-sports.io'+endpoint,
+                          headers={'x-apisports-key':key,'Accept':'application/json'})
+                  with urlopen(req,timeout=17) as f:
+                      return json.loads(f.read(200000))
+              try:
+                  status=request('/status')
+                  r=status.get('response',{}).get('requests',{})
+                  remaining=int(r.get('limit_day',0))-int(r.get('current',0))
+                  audit['daily_remaining']=max(0,remaining)
+                  if remaining <= 20:
+                      audit['status']='BILLABLE_QUERY_SKIPPED_QUOTA_RESERVE'
+                  else:
+                      audit['billable_queries']=1
+                      try:
+                          result=request('/teams?search=Juventus')
+                          errs=result.get('errors')
+                          if errs:
+                              allowed={'requests','plan','token','account','rateLimit','parameters','query','league','fixture'}
+                              keys=errs.keys() if isinstance(errs,dict) else []
+                              audit['api_error_categories']=[str(k) for k in keys if k in allowed]
+                              audit['status']='PROVIDER_ERROR_RETURNED'
+                          elif isinstance(result.get('response'),list):
+                              audit['status']='TEAM_QUERY_SUCCESS'
+                              audit['team_entries_count']=len(result['response'])
+                          else:
+                              audit['status']='UNKNOWN_RESPONSE_FORMAT'
+                      except HTTPError as e:
+                          audit['http_code']=e.code
+                          audit['status']='TEAM_QUERY_HTTP_REJECTED'
+                      except (URLError,TimeoutError,ValueError,TypeError):
+                          audit['status']='TEAM_QUERY_TRANSPORT_ERROR'
+              except HTTPError as e:
+                  audit['http_code']=e.code
+                  audit['status']='STATUS_QUERY_HTTP_REJECTED'
+              except (URLError,TimeoutError,ValueError,TypeError,KeyError):
+                  audit['status']='STATUS_QUERY_TRANSPORT_ERROR'
+          output.write_text(json.dumps(audit,indent=2)+'\n')
+          print('RESTRICTED_API_DIAGNOSTIC',audit['status'])
+          PY
+      - name: Post only nonsecret diagnostic summary
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('fs');
+            let r={status:'DIAGNOSTIC_MISSING'};
+            try{r=JSON.parse(fs.readFileSync('diagnostic.json','utf8'));}catch(e){}
+            const out={
+              status:String(r.status||'UNKNOWN').slice(0,70),
+              credential_present:r.credential_present===true,
+              daily_remaining:Number.isInteger(r.daily_remaining)?r.daily_remaining:null,
+              billable_queries:Math.min(1,Number(r.billable_queries)||0),
+              api_error_categories:Array.isArray(r.api_error_categories)?r.api_error_categories.slice(0,10):[],
+              http_code:[400,401,403,404,429,500,502,503].includes(r.http_code)?r.http_code:null,
+              team_entries_count:Number.isInteger(r.team_entries_count)?r.team_entries_count:null,
+              caveat:'No match search, odds call, request payload, provider token or response body published.'
+            };
+            await github.rest.issues.createComment({
+              owner:context.repo.owner,repo:context.repo.repo,
+              issue_number:context.issue.number,
+              body:'### BETPILOT | API-Sports diagnostic\n\n```json\n'+JSON.stringify(out,null,2)+'\n```'
+            });
