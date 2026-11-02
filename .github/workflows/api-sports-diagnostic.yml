@@ -62,7 +62,7 @@ jobs:
                               if len(set(candidates))==1 and remaining>21:
                                   audit['billable_queries']=2
                                   try:
-                                      fixtures=request('/fixtures?team='+str(candidates[0])+'&next=1&timezone=UTC')
+                                      fixtures=request('/fixtures?team='+str(candidates[0])+'&date=2026-11-02&timezone=UTC')
                                       errors=fixtures.get('errors')
                                       if errors:
                                           audit['fixture_status']='PROVIDER_ERRORS'
