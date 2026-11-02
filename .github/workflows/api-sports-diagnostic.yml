@@ -20,6 +20,7 @@ jobs:
           from urllib.request import Request,urlopen
           from urllib.error import HTTPError,URLError
           output=pathlib.Path('diagnostic.json')
+          allowed={'requests','plan','token','account','rateLimit','parameters','query','league','fixture'}
           audit={'status':'NOT_STARTED','credential_present':bool(os.environ.get('APISPORTS_KEY')),
                  'billable_queries':0,'api_error_categories':[],'http_code':None}
           key=os.environ.get('APISPORTS_KEY')
