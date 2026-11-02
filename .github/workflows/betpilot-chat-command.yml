@@ -108,6 +108,12 @@ jobs:
               timing_ms: result.timing_ms?.total ?? null,
               date_selection: String(result.date_selection || 'NONE').slice(0,80),
               sqlite_archives_found: Number(result.pitchapi_sqlite_archives_found || 0),
+              sqlite_native_conversion: result.sqlite_conversion?.status ===
+                'PITCHAPI_SQLITE_NATIVE_INPUTS_MATERIALIZED'
+                  ? 'PITCHAPI_SQLITE_NATIVE_INPUTS_MATERIALIZED' : 'NOT_VERIFIED',
+              converted_history_rows: Object.values(result.sqlite_conversion?.history_records || {})
+                .reduce((total, value) => total +
+                  (Number.isSafeInteger(value) && value >= 0 ? value : 0), 0),
               source: 'PitchAPI historical warehouse + API-Sports Bet365 only',
               disclaimer: 'Offline software tests are not real-match prediction validation.'
             };
