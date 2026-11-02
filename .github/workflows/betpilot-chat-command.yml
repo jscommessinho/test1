@@ -1,0 +1,89 @@
+name: BETPILOT PREMATCH | ChatGPT issue command
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: betpilot-prematch-issue-execution
+  cancel-in-progress: false
+jobs:
+  analyze:
+    if: github.event.issue.user.login == 'jscommessinho' && startsWith(github.event.issue.title, 'BETPILOT:')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      NUMBA_NUM_THREADS: '4'
+      BETPILOT_WAREHOUSE_ROOT: ${{ github.workspace }}/warehouse
+      BETPILOT_HISTORY_ROOT: ${{ github.workspace }}/history
+      BETPILOT_SOURCES_ROOT: ${{ github.workspace }}/verified_bundles
+    steps:
+      - name: Checkout the SHA-verified original-engine recovery, never untrusted issue code
+        uses: actions/checkout@v4
+        with:
+          ref: 9ceee66e32d972422019eb826b2f843f795ff2a0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install original pinned numerical runtime
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
+      - name: Execute exact title as a subprocess argument, no shell injection or raw API response logs
+        env:
+          PITCHAPI_API_KEY: ${{ secrets.PITCHAPI_API_KEY }}
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, re, subprocess, sys
+          event=json.loads(pathlib.Path(os.environ['GITHUB_EVENT_PATH']).read_text('utf8'))
+          request=event['issue']['title']
+          if not (isinstance(request,str) and len(request)<=200
+                  and re.fullmatch(r'BETPILOT:\\s*[^\\r\\n]{2,90}\\s+-\\s+[^\\r\\n]{2,90}', request)):
+              pathlib.Path('output/issue').mkdir(parents=True,exist_ok=True)
+              pathlib.Path('output/issue/BETPILOT_STATUS.json').write_text(
+                  json.dumps({'status':'INVALID_COMMAND','reason_code':'INVALID_ISSUE_TITLE','real_fixture_analysis_confirmed':False}))
+          else:
+              try:
+                  subprocess.run([sys.executable,'-m','betpilot_v3.command',request,
+                                  '--output-dir','output/issue'],
+                                 stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,
+                                 check=False,timeout=155)
+              except subprocess.TimeoutExpired:
+                  pathlib.Path('output/issue').mkdir(parents=True,exist_ok=True)
+                  pathlib.Path('output/issue/BETPILOT_STATUS.json').write_text(
+                      json.dumps({'status':'TIMEOUT','reason_code':'RUNNER_TIMEOUT','real_fixture_analysis_confirmed':False}))
+          print('BETPILOT safe execution finished. Read status from GitHub issue comment.')
+          PY
+      - name: Report result on the same issue (no credentials, no false full-analysis claim)
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let result = {};
+            try {
+              result = JSON.parse(fs.readFileSync('output/issue/BETPILOT_STATUS.json', 'utf8'));
+            } catch (e) {
+              result = {status:'INTEGRATION_ERROR',reason_code:'STATUS_FILE_UNAVAILABLE',real_fixture_analysis_confirmed:false};
+            }
+            const status = {
+              request: context.payload.issue.title,
+              status: String(result.status || 'UNKNOWN').slice(0,70),
+              reason_code: String(result.reason_code || 'NONE').slice(0,100),
+              five_engines_verified: result.five_engines_verified === true,
+              real_fixture_analysis_confirmed: result.real_fixture_analysis_confirmed === true,
+              decision: result.real_fixture_analysis_confirmed === true ? result.decision : 'NO BET / NO VERIFIED REAL REPORT',
+              timing_ms: result.timing_ms?.total ?? null,
+              source: 'PitchAPI historical warehouse + API-Sports Bet365 only',
+              disclaimer: 'Offline software tests are not real-match prediction validation.'
+            };
+            const body = '### BETPILOT | PREMATCH — execution result\n\n' +
+              '```json\n' + JSON.stringify(status,null,2).replaceAll('```','` ` `') + '\n```\n' +
+              '\nNo third-party match search, no invented odds. A verified full analysis is reported only when the native pipeline confirms it.';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number, body
+            });
