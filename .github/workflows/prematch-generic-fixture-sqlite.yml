@@ -184,3 +184,66 @@ jobs:
           print('RECORDS_WITH_ORIGINAL_HASH_VERIFIED',audit['raw_response_hashes_verified'])
           print('ORIGINAL_MODEL_FORMULAS_CHANGED',audit['model_formulas_changed'])
           PY
+
+      - name: Real Atalanta-Parma PitchAPI-only fixture and frozen GA3 GTS3 check
+        if: steps.condition.outputs.ready == 'true'
+        env:
+          PITCHAPI_API_KEY: ${{ secrets.PITCHAPI_API_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib
+          from datetime import datetime, timezone
+          from types import SimpleNamespace
+          from betpilot_v3.sqlite_source import select_fixture, match_candidates
+          root=pathlib.Path('private_pitchapi/data')
+          request='BETPILOT: Atalanta - Parma'
+          now=datetime.now(timezone.utc)
+          matches=match_candidates(root,request,now=now,upcoming=False)
+          future=select_fixture(root,request,now=now)
+          archive=pathlib.Path('/tmp/betpilot-source-ga3/ita-seriea/archive.json')
+          evidence={'fixture_source':'ORIGINAL_PITCHAPI_SQLITE_READ_ONLY',
+                    'request':request, 'future_match_verified':bool(future),
+                    'historical_h2h_found':len(matches),
+                    'ga3_executed':False,'gts3_executed':False,
+                    'status':'TARGET_FIXTURE_NOT_IN_EXISTING_SQLITE'}
+          if archive.is_file():
+              rows=json.loads(archive.read_text('utf8')).get('records',{})
+              def includes(row,name):
+                  return any(str(row.get(s,{}).get('name','')).casefold()==name
+                             for s in ('home','away'))
+              evidence['atalanta_history_records']=sum(includes(row,'atalanta') for row in rows.values())
+              evidence['parma_history_records']=sum(includes(row,'parma') for row in rows.values())
+              evidence['atalanta_home_records']=sum(str(row.get('home',{}).get('name','')).casefold()=='atalanta' for row in rows.values())
+              evidence['parma_away_records']=sum(str(row.get('away',{}).get('name','')).casefold()=='parma' for row in rows.values())
+          if future:
+              evidence['kickoff_utc']=future['kickoff']
+              evidence['competition']=future['competition']
+              evidence['country_code']=future['country_code']
+              if not os.environ.get('PITCHAPI_API_KEY'):
+                  evidence['status']='PITCHAPI_KEY_NOT_CONFIGURED'
+              else:
+                  # Test actual original GA3/GTS3 through unchanged native source
+                  # orchestration. Bookmaker and five-engine verdict not invoked.
+                  from betpilot_v3.pitchapi_native_phase1 import execute
+                  warehouse=pathlib.Path('/tmp/betpilot-atalanta-parma-daily')
+                  warehouse.mkdir(exist_ok=True)
+                  args=SimpleNamespace(request=request,
+                       day_utc=future['kickoff'][:10],
+                       country_code=future['country_code'],
+                       competition='Serie A',output_dir=pathlib.Path('/tmp/betpilot-atalanta-parma-ga-gts'),
+                       warehouse_root=warehouse,
+                       history_root=pathlib.Path('/tmp/betpilot-source-ga3'),
+                       team_stats_root=pathlib.Path('/tmp/betpilot-source-gts3'),
+                       team_stats_archive=None)
+                  try:
+                      result=execute(args)
+                      evidence['status']=result.get('status','UNKNOWN')
+                      evidence['reason_code']=result.get('reason_code')
+                      evidence['ga3_executed']=result.get('ga3_status')=='GA3_ORIGINAL_RESEARCH_EXECUTED'
+                      evidence['gts3_executed']=result.get('gts3_status')=='GTS3_ORIGINAL_RESEARCH_EXECUTED'
+                      evidence['native_bundle_created']=result.get('status')=='PITCHAPI_NATIVE_FIVE_EXPORTS_VERIFIED'
+                  except Exception as exc:
+                      evidence['status']='GA_GTS_NATIVE_STAGE_EXCEPTION'
+                      evidence['reason_code']=type(exc).__name__
+          print('ATALANTA_PARMA_REAL_PITCHAPI_ONLY',json.dumps(evidence,sort_keys=True))
+          PY
