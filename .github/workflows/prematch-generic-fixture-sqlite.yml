@@ -142,3 +142,26 @@ jobs:
               print('PITCHAPI_STATS_RAW_HAS_HOME_AWAY',isinstance(obj.get('home_team'),dict),isinstance(obj.get('away_team'),dict))
           con.close()
           PY
+
+      - name: Verify original response envelope and seasons for native source mapping
+        if: steps.condition.outputs.ready == 'true'
+        run: |
+          python - <<'PY'
+          import gzip,json,sqlite3
+          from pathlib import Path
+          from urllib.parse import quote
+          p=next(Path('private_pitchapi/data').glob('*/*.sqlite'))
+          db=sqlite3.connect('file:'+quote(str(p.resolve()),safe='/')+'?mode=ro',uri=True)
+          seasons=[x[0] for x in db.execute('SELECT DISTINCT season_label FROM seasons ORDER BY season_label')]
+          print('PITCHAPI_ORIGINAL_SEASON_LABELS', seasons)
+          row=db.execute("SELECT body_gzip FROM source_responses WHERE dataset='stats' ORDER BY response_id DESC LIMIT 1").fetchone()
+          if row:
+            data=json.loads(gzip.decompress(row[0]))['data']
+            print('PITCHAPI_ORIGINAL_DATA_TYPE',type(data).__name__)
+            if isinstance(data,dict):
+              print('PITCHAPI_ORIGINAL_DATA_KEYS', sorted(data))
+              print('PITCHAPI_ORIGINAL_DATA_PERIODS_TYPES',[str(v.get('period')) for v in data.get('periods',[]) if isinstance(v,dict)])
+              print('PITCHAPI_ORIGINAL_STAT_TEAM_IDS_PRESENT', isinstance(data.get('home_team'),dict),isinstance(data.get('away_team'),dict))
+              print('PITCHAPI_ORIGINAL_DATA_MATCH_ID_VALID',str(data.get('match_id','')).startswith('m_'))
+          db.close()
+          PY
