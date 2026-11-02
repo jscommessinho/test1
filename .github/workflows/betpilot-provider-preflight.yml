@@ -1,0 +1,54 @@
+name: BETPILOT | Authorized provider preflight
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: betpilot-provider-preflight
+  cancel-in-progress: false
+jobs:
+  provider-preflight:
+    if: github.event.issue.user.login == 'jscommessinho' && github.event.issue.title == 'BETPILOT PREFLIGHT'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 9ceee66e32d972422019eb826b2f843f795ff2a0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check only authorized providers (max 1 request each)
+        env:
+          PITCHAPI_API_KEY: ${{ secrets.PITCHAPI_API_KEY }}
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: |
+          python -m betpilot_v3.provider_preflight --output output/provider_preflight.json > /dev/null || true
+      - name: Report redacted provider authentication status to owner issue
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let result = {};
+            try {
+              result = JSON.parse(fs.readFileSync('output/provider_preflight.json', 'utf8'));
+            } catch (_) {
+              result = {status:'PREFLIGHT_RUNTIME_FAILURE', pitchapi:'NOT_CHECKED', api_sports:'NOT_CHECKED'};
+            }
+            const valid = (s, allowed) => allowed.includes(s) ? s : 'UNRECOGNIZED';
+            const report = {
+              status: valid(result.status, ['PROVIDER_CONNECTIVITY_VERIFIED','PROVIDER_PREFLIGHT_BLOCKED','AUTHENTICATION_ERROR','PREFLIGHT_RUNTIME_FAILURE']),
+              pitchapi: valid(result.pitchapi, ['AUTHENTICATED_RESPONSE','CONNECTION_OR_AUTH_FAILED','CREDENTIAL_PRESENT','MISSING_CREDENTIAL','NOT_CHECKED']),
+              api_sports: valid(result.api_sports, ['AUTHENTICATED_STATUS_AND_QUOTA','CONNECTION_OR_AUTH_FAILED','CREDENTIAL_PRESENT','MISSING_CREDENTIAL','NOT_CHECKED']),
+              pitchapi_error_type: ['HTTPError','URLError','TimeoutError','ValueError','ConnectionError','RuntimeError'].includes(result.pitchapi_error_type) ? result.pitchapi_error_type : undefined,
+              api_sports_error_type: ['HTTPError','URLError','TimeoutError','ValueError','ConnectionError','RuntimeError'].includes(result.api_sports_error_type) ? result.api_sports_error_type : undefined,
+              caveat: 'Connectivity test only; no fixture, odds, dataset or real prematch forecast verified.'
+            };
+            await github.rest.issues.createComment({
+              owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number,
+              body: '### BETPILOT | Authorized provider preflight\n\n```json\n' + JSON.stringify(report,null,2) + '\n```'
+            });
