@@ -165,7 +165,7 @@ def execute(args, *, odds_run=None, client_factory=None,
         if odds_run is None:
             quote_dir.mkdir(parents=True, exist_ok=True)
         client = (client_factory or QuotaClient)(
-            os.environ["APISPORTS_KEY"], reserve=20, max_calls=4)
+            os.environ["APISPORTS_KEY"], reserve=20, max_calls=5)
         if odds_run is not None:
             # Compatibility with pre-existing deterministic Phase 1 smoke mocks;
             # production does not use this country-specific path.

@@ -33,6 +33,8 @@ COUNTRIES = {
 # Only presentation-language equivalents, no automatic fuzzy team substitution.
 TEAM_ALIASES = {
     "siviglia":"sevilla", "bayern monaco":"bayern munich",
+    "inter milan":"inter", "internazionale":"inter",
+    "internazionale milano":"inter", "milan":"ac milan",
     "manchester united":"manchester united",
 }
 COUNTRY_ALIASES = {

@@ -94,13 +94,45 @@ class TestAutoFixtureDiscovery(unittest.TestCase):
     def test_home_team_ambiguous(self):
         cli=DummyClient()
         def many(path,**params):
-            if path=='/teams': return {'response':[{'team':{'id':1,'name':'Juventus'}},
-                                                {'team':{'id':2,'name':'Juventus'}}]}
+            if path=='/teams' and params['search']=='Juventus':
+                return {'response':[{'team':{'id':1,'name':'Juventus'}},
+                                    {'team':{'id':2,'name':'Juventus'}}]}
+            if path=='/teams' and params['search']=='Napoli':
+                return {'response':[]}
             raise AssertionError('Unexpected fixture call')
         cli.get=many
         with self.assertRaises(PreflightBlocked) as err:
             next_fixture(cli,'BETPILOT: Juventus - Napoli',now=NOW)
         self.assertEqual(err.exception.code,'HOME_TEAM_MISSING_OR_AMBIGUOUS')
+
+class TestAmbiguousClubName(unittest.TestCase):
+    def test_inter_ambiguity_resolved_by_real_milan_provider_id(self):
+        class ClubClient:
+            calls=[]
+            def get(self,path,**params):
+                self.calls.append((path,params))
+                if path=='/teams' and params['search']=='Inter':
+                    return {'response':[{'team':{'id':505,'name':'Inter'}},
+                                        {'team':{'id':777,'name':'Inter'}}]}
+                if path=='/teams' and params['search']=='Milan':
+                    return {'response':[{'team':{'id':489,'name':'AC Milan'}}]}
+                if path=='/fixtures':
+                    assert params['team']==489
+                    return {'paging':{'total':1},'response':[{'fixture':{'id':12001,
+                       'date':'2026-11-10T20:00:00+00:00','status':{'short':'NS'}},
+                       'teams':{'home':{'id':505,'name':'Inter'},'away':{'id':489,'name':'AC Milan'}},
+                       'league':{'id':135,'season':2026}}]}
+                raise AssertionError((path,params))
+        client=ClubClient()
+        result=next_fixture(client,'BETPILOT: Inter - Milan',now=NOW)
+        self.assertEqual(result['api_fixture_id'],12001)
+        self.assertEqual(result['disambiguation'],'AWAY_TEAM_EXACT_ID')
+        self.assertEqual([p for p,_ in client.calls],['/teams','/teams','/fixtures'])
+    def test_one_team_cannot_identify_arbitrary_duplicate_name(self):
+        from betpilot_v3.general_fixture import team
+        self.assertEqual(team('Internazionale'),team('Inter'))
+        self.assertEqual(team('Milan'),team('AC Milan'))
+        self.assertNotEqual(team('Inter Miami'),team('Inter'))
 
 class TestCommandUniversal(unittest.TestCase):
     def test_passes_generic_match_to_native_runner_with_sqlite_day(self):
