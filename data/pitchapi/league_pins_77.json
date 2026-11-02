@@ -1,0 +1,1236 @@
+{
+  "schema": "BETPILOT_PITCHAPI_LEAGUE_PINNED_77_v1",
+  "source_run": 41198690726,
+  "source_snapshot": "BETPILOT_PitchAPI_77_vs_OpenMatchday_75_Audit_2026-10-31.json",
+  "as_of_cutoff": "2026-10-31",
+  "note": "External publisher xG comparison not performed; preserve all source xG with quality flags, no frozen GTS modification",
+  "leagues": {
+    "cat-001": {
+      "league_id": "l_1rPvVD",
+      "league_name": "1. Division",
+      "country_code": "DEN",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SAMPLE_UNVERIFIED",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-002": {
+      "league_id": "l_1BFfna",
+      "league_name": "1. Lig",
+      "country_code": "INT",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-003": {
+      "league_id": "l_0F4I4F",
+      "league_name": "1. Liga",
+      "country_code": "CZE",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "CZE_1_chance-liga",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-004": {
+      "league_id": "l_4MU9Yh",
+      "league_name": "1. liga",
+      "country_code": "SVK",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "SVK_1_nike-liga",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "ger-bundesliga2": {
+      "league_id": "l_3hvsne",
+      "league_name": "2. Bundesliga",
+      "country_code": "GER",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "GER_2_2-bundesliga",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-006": {
+      "league_id": "l_47077Y",
+      "league_name": "3. Liga",
+      "country_code": "GER",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SAMPLE_UNVERIFIED",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "GER_3_3-liga",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-007": {
+      "league_id": "l_4MPd7x",
+      "league_name": "A-League",
+      "country_code": "AUS",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "AUS_1_a-league",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "swe-allsvenskan": {
+      "league_id": "l_1XsMdH",
+      "league_name": "Allsvenskan",
+      "country_code": "SWE",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022",
+        "2021"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "SWE_1_allsvenskan",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-009": {
+      "league_id": "l_1TTHxD",
+      "league_name": "Besta deild",
+      "country_code": "ISL",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "ger-bundesliga": {
+      "league_id": "l_1Isor4",
+      "league_name": "Bundesliga",
+      "country_code": "GER",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "GER_1_bundesliga",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "aut-bundesliga": {
+      "league_id": "l_3zsMpo",
+      "league_name": "Bundesliga",
+      "country_code": "AUT",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "AUT_1_bundesliga",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-012": {
+      "league_id": "l_4auCPk",
+      "league_name": "Challenge League",
+      "country_code": "SUI",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-013": {
+      "league_id": "l_1pQOHK",
+      "league_name": "Challenger Pro League",
+      "country_code": "BEL",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-014": {
+      "league_id": "l_0bfbkO",
+      "league_name": "Champions League",
+      "country_code": "INT",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "UEFA_1_champions-league",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "eng-championship": {
+      "league_id": "l_4DWyTT",
+      "league_name": "Championship",
+      "country_code": "ENG",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "ENG_2_championship",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-016": {
+      "league_id": "l_2WZ2tt",
+      "league_name": "Conference League",
+      "country_code": "INT-2",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "UEFA_1_conference-league",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-017": {
+      "league_id": "l_4FPF2L",
+      "league_name": "Division Profesional",
+      "country_code": "PAR",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025"
+      ],
+      "sample_xg_status": "XG_SAMPLE_UNVERIFIED",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-018": {
+      "league_id": "l_49KZaB",
+      "league_name": "Eerste Divisie",
+      "country_code": "NED",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "NED_2_eerste-divisie",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "pol-ekstraklasa": {
+      "league_id": "l_214sqK",
+      "league_name": "Ekstraklasa",
+      "country_code": "POL",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "POL_1_ekstraklasa",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "nor-eliteserien": {
+      "league_id": "l_0uqFK8",
+      "league_name": "Eliteserien",
+      "country_code": "NOR",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022",
+        "2021"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "NOR_1_eliteserien",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "ned-eredivisie": {
+      "league_id": "l_4H43wr",
+      "league_name": "Eredivisie",
+      "country_code": "NED",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "NED_1_eredivisie",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-022": {
+      "league_id": "l_38d9HA",
+      "league_name": "Europa League",
+      "country_code": "INT-2",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_WARNING",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "UEFA_1_europa-league",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-023": {
+      "league_id": "l_2L6d1F",
+      "league_name": "First Division A",
+      "country_code": "BEL",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "BEL_1_pro-league",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-024": {
+      "league_id": "l_2tFk9k",
+      "league_name": "HNL",
+      "country_code": "CRO",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "CRO_1_hnl",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-025": {
+      "league_id": "l_1qpFVw",
+      "league_name": "Indian Super League",
+      "country_code": "IND",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "jpn-j1": {
+      "league_id": "l_2ApGa4",
+      "league_name": "J. League",
+      "country_code": "JPN",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "JPN_1_j1-league",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-027": {
+      "league_id": "l_3fglZv",
+      "league_name": "J3 League",
+      "country_code": "JPN",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SAMPLE_UNVERIFIED",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-028": {
+      "league_id": "l_2EKrnc",
+      "league_name": "K League 1",
+      "country_code": "KOR",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-029": {
+      "league_id": "l_271pqa",
+      "league_name": "K League 2",
+      "country_code": "KOR",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SAMPLE_UNVERIFIED",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "esp-laliga": {
+      "league_id": "l_0ErfuF",
+      "league_name": "LaLiga",
+      "country_code": "ESP",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "ESP_1_la-liga",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "esp-segunda": {
+      "league_id": "l_3kyHLd",
+      "league_name": "LaLiga2",
+      "country_code": "ESP",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "ESP_2_segunda-division",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-032": {
+      "league_id": "l_0ahLw8",
+      "league_name": "League One",
+      "country_code": "ENG",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "ENG_3_league-one",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-033": {
+      "league_id": "l_1W6idJ",
+      "league_name": "League Two",
+      "country_code": "ENG",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "ENG_4_league-two",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-034": {
+      "league_id": "l_3uNwVX",
+      "league_name": "Liga 1",
+      "country_code": "PER",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-035": {
+      "league_id": "l_0kSJLz",
+      "league_name": "Liga I",
+      "country_code": "ROU",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "ROU_1_liga-1",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-036": {
+      "league_id": "l_3v84VE",
+      "league_name": "Liga MX",
+      "country_code": "MEX",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "MEX_1_liga-mx",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "por-primeira": {
+      "league_id": "l_4QexZg",
+      "league_name": "Liga Portugal",
+      "country_code": "POR",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "POR_1_primeira-liga",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "arg-primera": {
+      "league_id": "l_45VZuL",
+      "league_name": "Liga Profesional",
+      "country_code": "ARG",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "ARG_1_liga-profesional",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-039": {
+      "league_id": "l_3qNjzC",
+      "league_name": "Liga de Primera",
+      "country_code": "CHI",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-040": {
+      "league_id": "l_16Sq13",
+      "league_name": "Ligat ha'Al",
+      "country_code": "ISR",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SAMPLE_UNVERIFIED",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "fra-ligue1": {
+      "league_id": "l_3FJFUl",
+      "league_name": "Ligue 1",
+      "country_code": "FRA",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "FRA_1_ligue-1",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "fra-ligue2": {
+      "league_id": "l_0275VP",
+      "league_name": "Ligue 2",
+      "country_code": "FRA",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "FRA_2_ligue-2",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "usa-mls": {
+      "league_id": "l_0eg6C9",
+      "league_name": "MLS",
+      "country_code": "USA",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022",
+        "2021"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "USA_1_mls",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-044": {
+      "league_id": "l_3Tn1kG",
+      "league_name": "MLS Next Pro",
+      "country_code": "USA",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-045": {
+      "league_id": "l_4V6jPs",
+      "league_name": "Paulista A1",
+      "country_code": "BRA",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-046": {
+      "league_id": "l_1eJSA7",
+      "league_name": "Premier Division",
+      "country_code": "IRL",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-047": {
+      "league_id": "l_46aZMC",
+      "league_name": "Premier League",
+      "country_code": "EGY",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-048": {
+      "league_id": "l_3UiOcj",
+      "league_name": "Premier League",
+      "country_code": "CAN",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "eng-premier": {
+      "league_id": "l_4WFCIZ",
+      "league_name": "Premier League",
+      "country_code": "ENG",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "ENG_1_premier-league",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-050": {
+      "league_id": "l_2Mh0jT",
+      "league_name": "Premier League",
+      "country_code": "RUS",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "RUS_1_premier-liga",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-051": {
+      "league_id": "l_1Kknkl",
+      "league_name": "Premier Soccer League",
+      "country_code": "RSA",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "sco-premiership": {
+      "league_id": "l_1LMdEO",
+      "league_name": "Premiership",
+      "country_code": "SCO",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "SCO_1_premiership",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-053": {
+      "league_id": "l_1xXulJ",
+      "league_name": "Primera A",
+      "country_code": "COL",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-054": {
+      "league_id": "l_4dzm4e",
+      "league_name": "Primera Division",
+      "country_code": "BOL",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-055": {
+      "league_id": "l_1TVRZW",
+      "league_name": "Primera Division",
+      "country_code": "VEN",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-056": {
+      "league_id": "l_0aEfof",
+      "league_name": "Pro League",
+      "country_code": "UAE",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-057": {
+      "league_id": "l_3wr44B",
+      "league_name": "Qatar Stars League",
+      "country_code": "QAT",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-058": {
+      "league_id": "l_3CB6qX",
+      "league_name": "Saudi First Division",
+      "country_code": "KSA",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_PRESENT_UNCROSSCHECKED",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-059": {
+      "league_id": "l_0Lpz1f",
+      "league_name": "Saudi Pro League",
+      "country_code": "KSA",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "bra-seriea": {
+      "league_id": "l_1D8Xrl",
+      "league_name": "Serie A",
+      "country_code": "BRA",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "BRA_1_serie-a",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-061": {
+      "league_id": "l_1dmt9H",
+      "league_name": "Serie A",
+      "country_code": "ECU",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "ita-seriea": {
+      "league_id": "l_0ALvwF",
+      "league_name": "Serie A",
+      "country_code": "ITA",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "ITA_1_serie-a",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "bra-serieb": {
+      "league_id": "l_3qUkB8",
+      "league_name": "Serie B",
+      "country_code": "BRA",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "BRA_2_serie-b",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "ita-serieb": {
+      "league_id": "l_0jy5yE",
+      "league_name": "Serie B",
+      "country_code": "ITA",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "ITA_2_serie-b",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "chn-superleague": {
+      "league_id": "l_20pNSc",
+      "league_name": "Super League",
+      "country_code": "CHN",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "CHN_1_super-league",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-066": {
+      "league_id": "l_4d6Bwl",
+      "league_name": "Super League",
+      "country_code": "SUI",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "SUI_1_super-league",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "gre-superleague": {
+      "league_id": "l_3xwVF2",
+      "league_name": "Super League 1",
+      "country_code": "GRE",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "GRE_1_super-league",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "tur-superlig": {
+      "league_id": "l_0S1uaf",
+      "league_name": "Super Lig",
+      "country_code": "TUR",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "TUR_1_super-lig",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-069": {
+      "league_id": "l_2xBPKk",
+      "league_name": "Super Liga",
+      "country_code": "SRB",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-070": {
+      "league_id": "l_49Zmno",
+      "league_name": "Superligaen",
+      "country_code": "DEN",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "DEN_1_superliga",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-071": {
+      "league_id": "l_3hW1NO",
+      "league_name": "Thai League 1",
+      "country_code": "THA",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-072": {
+      "league_id": "l_3yVUAO",
+      "league_name": "USL Championship",
+      "country_code": "USA",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-073": {
+      "league_id": "l_3Kf7Ni",
+      "league_name": "USL League One",
+      "country_code": "USA",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "fin-veikkausliiga": {
+      "league_id": "l_3Ci5Cg",
+      "league_name": "Veikkausliiga",
+      "country_code": "FIN",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": true,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": "FIN_1_veikkausliiga",
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-075": {
+      "league_id": "l_45xKXM",
+      "league_name": "Virsliga",
+      "country_code": "LVA",
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_PASS",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-076": {
+      "league_id": "l_1SGwQT",
+      "league_name": "Women's Premier League",
+      "country_code": "KSA",
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ],
+      "sample_xg_status": "XG_SAMPLE_UNVERIFIED",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    },
+    "cat-077": {
+      "league_id": "l_1XLtP0",
+      "league_name": "World Cup",
+      "country_code": "INT",
+      "seasons_from_catalogue": [
+        "2026",
+        "2022"
+      ],
+      "sample_xg_status": "XG_SHOTS_TESTED_WARNING",
+      "prior26": false,
+      "observed_catalogue_date": "2026-10-31",
+      "public_competition_folder": null,
+      "warning": "Registry verifies only provider catalogue ID/name/country; sample xG success is not full-season proof."
+    }
+  }
+}

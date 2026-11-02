@@ -1,0 +1,88 @@
+{
+  "schema": "BETPILOT_PITCHAPI_PROVIDER_CATALOGUE_ALIASES_V1",
+  "retrieved_date_utc": "2026-10-31",
+  "source_run_id": 41188064558,
+  "source_description": "PitchAPI authenticated /v1/leagues catalogue of 77 leagues, compared with BETPILOT target-25 league registry; explicit name, country, tier review.",
+  "external_federation_attested": false,
+  "note": "These aliases resolve catalogue identities only, not official external xG or predictive validity. Fail closed if provider ID/name/country changes.",
+  "aliases": {
+    "eng-championship": {
+      "pitchapi_league_id": "l_4DWyTT",
+      "pitchapi_league_name": "Championship",
+      "country_code": "ENG",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "esp-laliga": {
+      "pitchapi_league_id": "l_0ErfuF",
+      "pitchapi_league_name": "LaLiga",
+      "country_code": "ESP",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "esp-segunda": {
+      "pitchapi_league_id": "l_3kyHLd",
+      "pitchapi_league_name": "LaLiga2",
+      "country_code": "ESP",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "por-primeira": {
+      "pitchapi_league_id": "l_4QexZg",
+      "pitchapi_league_name": "Liga Portugal",
+      "country_code": "POR",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "gre-superleague": {
+      "pitchapi_league_id": "l_3xwVF2",
+      "pitchapi_league_name": "Super League 1",
+      "country_code": "GRE",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "aut-bundesliga": {
+      "pitchapi_league_id": "l_3zsMpo",
+      "pitchapi_league_name": "Bundesliga",
+      "country_code": "AUT",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "sco-premiership": {
+      "pitchapi_league_id": "l_1LMdEO",
+      "pitchapi_league_name": "Premiership",
+      "country_code": "SCO",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "bra-seriea": {
+      "pitchapi_league_id": "l_1D8Xrl",
+      "pitchapi_league_name": "Serie A",
+      "country_code": "BRA",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "bra-serieb": {
+      "pitchapi_league_id": "l_3qUkB8",
+      "pitchapi_league_name": "Serie B",
+      "country_code": "BRA",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "arg-primera": {
+      "pitchapi_league_id": "l_45VZuL",
+      "pitchapi_league_name": "Liga Profesional",
+      "country_code": "ARG",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "jpn-j1": {
+      "pitchapi_league_id": "l_2ApGa4",
+      "pitchapi_league_name": "J. League",
+      "country_code": "JPN",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "chn-superleague": {
+      "pitchapi_league_id": "l_20pNSc",
+      "pitchapi_league_name": "Super League",
+      "country_code": "CHN",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    },
+    "usa-mls": {
+      "pitchapi_league_id": "l_0eg6C9",
+      "pitchapi_league_name": "MLS",
+      "country_code": "USA",
+      "review_basis": "catalogue country+name+tier matching target competition; not externally attested"
+    }
+  }
+}

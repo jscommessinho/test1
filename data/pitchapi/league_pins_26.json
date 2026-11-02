@@ -1,0 +1,364 @@
+{
+  "schema": "BETPILOT_PITCHAPI_LEAGUE_PINNED_26_v1",
+  "source_run": 41188189653,
+  "retrieved_as_of": "2026-10-31",
+  "scope_note": "25 priority competitions plus Polish Ekstraklasa, one match smoke tested per league; not proof of entire season coverage",
+  "leagues": {
+    "eng-premier": {
+      "league_id": "l_4WFCIZ",
+      "league_name": "Premier League",
+      "country_code": "ENG",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ]
+    },
+    "eng-championship": {
+      "league_id": "l_4DWyTT",
+      "league_name": "Championship",
+      "country_code": "ENG",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ]
+    },
+    "ger-bundesliga": {
+      "league_id": "l_1Isor4",
+      "league_name": "Bundesliga",
+      "country_code": "GER",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ]
+    },
+    "ger-bundesliga2": {
+      "league_id": "l_3hvsne",
+      "league_name": "2. Bundesliga",
+      "country_code": "GER",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ]
+    },
+    "esp-laliga": {
+      "league_id": "l_0ErfuF",
+      "league_name": "LaLiga",
+      "country_code": "ESP",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ]
+    },
+    "esp-segunda": {
+      "league_id": "l_3kyHLd",
+      "league_name": "LaLiga2",
+      "country_code": "ESP",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ]
+    },
+    "ita-seriea": {
+      "league_id": "l_0ALvwF",
+      "league_name": "Serie A",
+      "country_code": "ITA",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ]
+    },
+    "ita-serieb": {
+      "league_id": "l_0jy5yE",
+      "league_name": "Serie B",
+      "country_code": "ITA",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ]
+    },
+    "fra-ligue1": {
+      "league_id": "l_3FJFUl",
+      "league_name": "Ligue 1",
+      "country_code": "FRA",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ]
+    },
+    "fra-ligue2": {
+      "league_id": "l_0275VP",
+      "league_name": "Ligue 2",
+      "country_code": "FRA",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ]
+    },
+    "por-primeira": {
+      "league_id": "l_4QexZg",
+      "league_name": "Liga Portugal",
+      "country_code": "POR",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ]
+    },
+    "ned-eredivisie": {
+      "league_id": "l_4H43wr",
+      "league_name": "Eredivisie",
+      "country_code": "NED",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ]
+    },
+    "tur-superlig": {
+      "league_id": "l_0S1uaf",
+      "league_name": "Super Lig",
+      "country_code": "TUR",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023"
+      ]
+    },
+    "nor-eliteserien": {
+      "league_id": "l_0uqFK8",
+      "league_name": "Eliteserien",
+      "country_code": "NOR",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022",
+        "2021"
+      ]
+    },
+    "swe-allsvenskan": {
+      "league_id": "l_1XsMdH",
+      "league_name": "Allsvenskan",
+      "country_code": "SWE",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022",
+        "2021"
+      ]
+    },
+    "gre-superleague": {
+      "league_id": "l_3xwVF2",
+      "league_name": "Super League 1",
+      "country_code": "GRE",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025"
+      ]
+    },
+    "aut-bundesliga": {
+      "league_id": "l_3zsMpo",
+      "league_name": "Bundesliga",
+      "country_code": "AUT",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ]
+    },
+    "sco-premiership": {
+      "league_id": "l_1LMdEO",
+      "league_name": "Premiership",
+      "country_code": "SCO",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026",
+        "2024/2025",
+        "2023/2024",
+        "2022/2023",
+        "2021/2022"
+      ]
+    },
+    "fin-veikkausliiga": {
+      "league_id": "l_3Ci5Cg",
+      "league_name": "Veikkausliiga",
+      "country_code": "FIN",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ]
+    },
+    "bra-seriea": {
+      "league_id": "l_1D8Xrl",
+      "league_name": "Serie A",
+      "country_code": "BRA",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023"
+      ]
+    },
+    "bra-serieb": {
+      "league_id": "l_3qUkB8",
+      "league_name": "Serie B",
+      "country_code": "BRA",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ]
+    },
+    "arg-primera": {
+      "league_id": "l_45VZuL",
+      "league_name": "Liga Profesional",
+      "country_code": "ARG",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023"
+      ]
+    },
+    "jpn-j1": {
+      "league_id": "l_2ApGa4",
+      "league_name": "J. League",
+      "country_code": "JPN",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022"
+      ]
+    },
+    "chn-superleague": {
+      "league_id": "l_20pNSc",
+      "league_name": "Super League",
+      "country_code": "CHN",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024"
+      ]
+    },
+    "usa-mls": {
+      "league_id": "l_0eg6C9",
+      "league_name": "MLS",
+      "country_code": "USA",
+      "mapping": "REVIEWED_CATALOGUE_ALIAS_PINNED",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022",
+        "2021"
+      ]
+    },
+    "pol-ekstraklasa": {
+      "league_id": "l_214sqK",
+      "league_name": "Ekstraklasa",
+      "country_code": "POL",
+      "mapping": "EXACT_NAME_AND_COUNTRY_CANDIDATE",
+      "tested_one_match": true,
+      "seasons_from_catalogue": [
+        "2026/2027",
+        "2025/2026"
+      ]
+    }
+  }
+}

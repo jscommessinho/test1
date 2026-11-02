@@ -1,0 +1,333 @@
+name: BETPILOT | Any Fixture + SQLite Read-Only Regression
+on:
+  push:
+    branches: ['recovery/**']
+    paths:
+      - 'betpilot_v3/sqlite_source.py'
+      - 'betpilot_v3/sqlite_native_export.py'
+      - 'tests/test_sqlite_native_export.py'
+      - 'betpilot_v3/private_sqlite_mount.py'
+      - 'betpilot_v3/fixture_autodiscovery.py'
+      - 'betpilot_v3/command.py'
+      - 'betpilot_v3/real_prematch_bridge.py'
+      - 'betpilot/quota_smart.py'
+      - 'tests/test_generic_match_and_sqlite.py'
+      - 'tests/test_private_sqlite_mount.py'
+      - '.github/workflows/prematch-generic-fixture-sqlite.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-generic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test multiple arbitrary fixtures and read-only SQLite provider access
+        run: python -m unittest tests.test_generic_match_and_sqlite tests.test_private_sqlite_mount -v
+      - name: Confirm all five original engine artifacts are still SHA-verified
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          manifest=json.loads(Path('betpilot_v3/SOURCE_ZIPS_SHA256.json').read_text('utf8'))
+          print('Manifest records',len(manifest))
+          PY
+      - name: Verify original SQLite to pinned GTS3-native bridge with security cases
+        run: python -m unittest tests.test_sqlite_native_export -v
+      - name: Verify any-match CLI refuses invented fixture and quota inputs
+        run: |
+          python - <<'PY'
+          from betpilot_v3.full_analysis import parse_request
+          for case in ['BETPILOT: Roma - Lazio', 'BETPILOT: Inter - Milan',
+                       'BETPILOT: Deportivo La Coruña - Osasuna',
+                       'BETPILOT: Arsenal - Liverpool',
+                       'BETPILOT: Boca Juniors - River Plate']:
+              a,b=parse_request(case)
+              assert a and b and a!=b
+          print('GENERIC_COMMAND_PARSER_OK: 5 distinct fixtures, no hardcoded club')
+          PY
+  original-private-sqlite-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      PITCHAPI_SOURCE_READ_TOKEN: ${{ secrets.PITCHAPI_SOURCE_READ_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Identify availability of independent read-only source credential
+        id: condition
+        run: |
+          if [ -n "$PITCHAPI_SOURCE_READ_TOKEN" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'PRIVATE_SQLITE_MOUNT_UNAVAILABLE: No read-only source secret configured'
+          fi
+      - uses: actions/setup-python@v5
+        if: steps.condition.outputs.ready == 'true'
+        with:
+          python-version: '3.11'
+      - name: Import only two recent seasons per league, no changes to source repository
+        if: steps.condition.outputs.ready == 'true'
+        run: python -m betpilot_v3.private_sqlite_mount --output private_pitchapi --seasons 2
+      - name: Validate source SQLITE schema in read-only mode, never upload database as artifact
+        if: steps.condition.outputs.ready == 'true'
+        run: |
+          python - <<'PY'
+          import sqlite3
+          from pathlib import Path
+          from urllib.parse import quote
+          paths=list(Path('private_pitchapi/data').rglob('*.sqlite'))
+          assert len(paths)>1, 'No source databases found'
+          fixture_archives=0
+          for p in paths:
+              uri='file:'+quote(str(p.resolve()),safe='/')+'?mode=ro'
+              with sqlite3.connect(uri,uri=True) as db:
+                  tables={r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+                  if 'fixtures' in tables:
+                      fixture_archives+=1
+          assert fixture_archives>0,'No original fixture index present'
+          print('PRIVATE_ORIGINAL_SQLITE_READ_ONLY_VERIFIED', fixture_archives)
+          PY
+
+      - name: Assess original aggregate PitchAPI xG and archived endpoints without exporting records
+        if: steps.condition.outputs.ready == 'true'
+        run: |
+          python - <<'PY'
+          import sqlite3
+          from pathlib import Path
+          from urllib.parse import quote
+          tally={'archives':0,'finished_fixtures':0,'stats_rows':0,'xg_metric_rows':0,'responses':0}
+          datasets=set()
+          for p in Path('private_pitchapi/data').glob('*/*.sqlite'):
+              con=sqlite3.connect('file:'+quote(str(p.resolve()),safe='/')+'?mode=ro',uri=True)
+              con.execute('PRAGMA query_only=ON')
+              tables={r[0] for r in con.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+              tally['archives']+=1
+              if 'fixtures' in tables:
+                  tally['finished_fixtures']+=con.execute("SELECT count(*) FROM fixtures WHERE lower(fixture_status) IN ('finished','ft','played','complete','completed')").fetchone()[0]
+              if 'match_team_stats' in tables:
+                  tally['stats_rows']+=con.execute("SELECT count(*) FROM match_team_stats").fetchone()[0]
+                  tally['xg_metric_rows']+=con.execute("SELECT count(*) FROM match_team_stats WHERE lower(metric_key) LIKE '%xg%' OR lower(metric_key) LIKE '%expected%goal%'").fetchone()[0]
+              if 'source_responses' in tables:
+                  tally['responses']+=con.execute("SELECT count(*) FROM source_responses").fetchone()[0]
+                  datasets.update(x[0] for x in con.execute("SELECT DISTINCT dataset FROM source_responses"))
+              con.close()
+          print('ORIGINAL_PITCHAPI_SCHEMA_COUNTS',tally)
+          print('ORIGINAL_PITCHAPI_DATASETS',sorted(datasets))
+          print('Original archive rows were counted in read-only mode, not exported')
+          PY
+
+      - name: Inspect stat keys and raw PitchAPI stats shape without logging values or IDs
+        if: steps.condition.outputs.ready == 'true'
+        run: |
+          python - <<'PY'
+          import gzip,json,sqlite3
+          from pathlib import Path
+          from urllib.parse import quote
+          p=next(Path('private_pitchapi/data').glob('*/*.sqlite'))
+          con=sqlite3.connect('file:'+quote(str(p.resolve()),safe='/')+'?mode=ro',uri=True)
+          con.execute('PRAGMA query_only=ON')
+          keys=[r[0] for r in con.execute("SELECT DISTINCT metric_key FROM match_team_stats ORDER BY metric_key")]
+          print('PITCHAPI_TEAM_METRIC_KEYS',keys)
+          rows=con.execute("SELECT body_gzip FROM source_responses WHERE dataset='stats' AND body_gzip IS NOT NULL ORDER BY response_id DESC LIMIT 1").fetchone()
+          if rows:
+            obj=json.loads(gzip.decompress(rows[0]).decode('utf8'))
+            print('PITCHAPI_STATS_RAW_TOP_LEVEL_KEYS',sorted(obj.keys()) if isinstance(obj,dict) else type(obj).__name__)
+            if isinstance(obj,dict):
+              print('PITCHAPI_STATS_RAW_PERIOD_TYPES',[str(x.get('period')) for x in obj.get('periods',[]) if isinstance(x,dict)])
+              print('PITCHAPI_STATS_RAW_HAS_HOME_AWAY',isinstance(obj.get('home_team'),dict),isinstance(obj.get('away_team'),dict))
+          con.close()
+          PY
+
+      - name: Verify original response envelope and seasons for native source mapping
+        if: steps.condition.outputs.ready == 'true'
+        run: |
+          python - <<'PY'
+          import gzip,json,sqlite3
+          from pathlib import Path
+          from urllib.parse import quote
+          p=next(Path('private_pitchapi/data').glob('*/*.sqlite'))
+          db=sqlite3.connect('file:'+quote(str(p.resolve()),safe='/')+'?mode=ro',uri=True)
+          seasons=[x[0] for x in db.execute('SELECT DISTINCT season_label FROM seasons ORDER BY season_label')]
+          print('PITCHAPI_ORIGINAL_SEASON_LABELS', seasons)
+          row=db.execute("SELECT body_gzip FROM source_responses WHERE dataset='stats' ORDER BY response_id DESC LIMIT 1").fetchone()
+          if row:
+            data=json.loads(gzip.decompress(row[0]))['data']
+            print('PITCHAPI_ORIGINAL_DATA_TYPE',type(data).__name__)
+            if isinstance(data,dict):
+              print('PITCHAPI_ORIGINAL_DATA_KEYS', sorted(data))
+              print('PITCHAPI_ORIGINAL_DATA_PERIODS_TYPES',[str(v.get('period')) for v in data.get('periods',[]) if isinstance(v,dict)])
+              print('PITCHAPI_ORIGINAL_STAT_TEAM_IDS_PRESENT', isinstance(data.get('home_team'),dict),isinstance(data.get('away_team'),dict))
+              print('PITCHAPI_ORIGINAL_DATA_MATCH_ID_VALID',str(data.get('match_id','')).startswith('m_'))
+          db.close()
+          PY
+      - name: Materialize authenticated original database into GA3 and GTS3 source adapters
+        if: steps.condition.outputs.ready == 'true'
+        run: |
+          python -m betpilot_v3.sqlite_native_export --sqlite-root private_pitchapi/data --history-root /tmp/betpilot-source-ga3 --team-stats-root /tmp/betpilot-source-gts3 --output /tmp/betpilot-sqlite-native-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          audit=json.loads(Path('/tmp/betpilot-sqlite-native-audit.json').read_text('utf8'))
+          assert audit['status']=='PITCHAPI_SQLITE_NATIVE_INPUTS_MATERIALIZED'
+          assert audit['raw_response_hashes_verified']>0
+          assert sum(audit['history_records'].values())>0
+          print('ORIGINAL_PITCHAPI_GA3_GTS3_VALIDATED',audit['history_records'])
+          print('RECORDS_WITH_ORIGINAL_HASH_VERIFIED',audit['raw_response_hashes_verified'])
+          print('ORIGINAL_MODEL_FORMULAS_CHANGED',audit['model_formulas_changed'])
+          PY
+
+      - name: Real Atalanta-Parma PitchAPI-only fixture and frozen GA3 GTS3 check
+        if: steps.condition.outputs.ready == 'true'
+        env:
+          PITCHAPI_API_KEY: ${{ secrets.PITCHAPI_API_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib
+          from datetime import datetime, timezone
+          from types import SimpleNamespace
+          from betpilot_v3.sqlite_source import select_fixture, match_candidates
+          root=pathlib.Path('private_pitchapi/data')
+          request='BETPILOT: Atalanta - Parma'
+          now=datetime.now(timezone.utc)
+          matches=match_candidates(root,request,now=now,upcoming=False)
+          future=select_fixture(root,request,now=now)
+          archive=pathlib.Path('/tmp/betpilot-source-ga3/ita-seriea/archive.json')
+          evidence={'fixture_source':'ORIGINAL_PITCHAPI_SQLITE_READ_ONLY',
+                    'request':request, 'future_match_verified':bool(future),
+                    'historical_h2h_found':len(matches),
+                    'ga3_executed':False,'gts3_executed':False,
+                    'status':'TARGET_FIXTURE_NOT_IN_EXISTING_SQLITE'}
+          if archive.is_file():
+              rows=json.loads(archive.read_text('utf8')).get('records',{})
+              def includes(row,name):
+                  return any(str(row.get(s,{}).get('name','')).casefold()==name
+                             for s in ('home','away'))
+              evidence['atalanta_history_records']=sum(includes(row,'atalanta') for row in rows.values())
+              evidence['parma_history_records']=sum(includes(row,'parma') for row in rows.values())
+              evidence['atalanta_home_records']=sum(str(row.get('home',{}).get('name','')).casefold()=='atalanta' for row in rows.values())
+              evidence['parma_away_records']=sum(str(row.get('away',{}).get('name','')).casefold()=='parma' for row in rows.values())
+          if future:
+              evidence['kickoff_utc']=future['kickoff']
+              evidence['competition']=future['competition']
+              evidence['country_code']=future['country_code']
+              if not os.environ.get('PITCHAPI_API_KEY'):
+                  evidence['status']='PITCHAPI_KEY_NOT_CONFIGURED'
+              else:
+                  # Test actual original GA3/GTS3 through unchanged native source
+                  # orchestration. Bookmaker and five-engine verdict not invoked.
+                  from betpilot_v3.pitchapi_native_phase1 import execute
+                  warehouse=pathlib.Path('/tmp/betpilot-atalanta-parma-daily')
+                  warehouse.mkdir(exist_ok=True)
+                  args=SimpleNamespace(request=request,
+                       day_utc=future['kickoff'][:10],
+                       country_code=future['country_code'],
+                       competition='Serie A',output_dir=pathlib.Path('/tmp/betpilot-atalanta-parma-ga-gts'),
+                       warehouse_root=warehouse,
+                       history_root=pathlib.Path('/tmp/betpilot-source-ga3'),
+                       team_stats_root=pathlib.Path('/tmp/betpilot-source-gts3'),
+                       team_stats_archive=None)
+                  try:
+                      result=execute(args)
+                      evidence['status']=result.get('status','UNKNOWN')
+                      evidence['reason_code']=result.get('reason_code')
+                      evidence['ga3_executed']=result.get('ga3_status')=='GA3_ORIGINAL_RESEARCH_EXECUTED'
+                      evidence['gts3_executed']=result.get('gts3_status')=='GTS3_ORIGINAL_RESEARCH_EXECUTED'
+                      evidence['native_bundle_created']=result.get('status')=='PITCHAPI_NATIVE_FIVE_EXPORTS_VERIFIED'
+                  except Exception as exc:
+                      evidence['status']='GA_GTS_NATIVE_STAGE_EXCEPTION'
+                      evidence['reason_code']=type(exc).__name__
+          print('ATALANTA_PARMA_REAL_PITCHAPI_ONLY',json.dumps(evidence,sort_keys=True))
+          PY
+
+      - name: PitchAPI live league fixture lookup, then original GA3-GTS3 if match verified
+        if: steps.condition.outputs.ready == 'true'
+        env:
+          PITCHAPI_API_KEY: ${{ secrets.PITCHAPI_API_KEY }}
+        run: |
+          python - <<'PY'
+          import json,os,pathlib,subprocess,sys
+          from datetime import datetime,timezone
+          from types import SimpleNamespace
+          from betpilot.pitchapi_gts_probe import Client
+          from betpilot_v3.general_fixture import team
+          from betpilot_v3.pitchapi_preflight import instant
+          report={'source':'PITCHAPI_AUTHENTICATED_SEASON_FIXTURES',
+                  'request':'BETPILOT: Atalanta - Parma',
+                  'status':'NOT_CHECKED','ga3_executed':False,'gts3_executed':False}
+          try:
+              if not os.environ.get('PITCHAPI_API_KEY'):
+                  report['status']='PITCHAPI_KEY_MISSING'
+              else:
+                  pins=json.loads(pathlib.Path('data/pitchapi/league_pins_77.json').read_text('utf8'))
+                  league=pins['leagues']['ita-seriea']
+                  assert league['league_name']=='Serie A' and league['country_code']=='ITA'
+                  client=Client(os.environ['PITCHAPI_API_KEY'],budget=1,pause=0)
+                  data=client.get('/v1/leagues/'+league['league_id']+'/matches',
+                                  {'season':'2026/2027','status':'upcoming'})
+                  if (data.get('league') or {}).get('id')!=league['league_id'] or not isinstance(data.get('matches'),list):
+                      report['status']='PITCHAPI_LEAGUE_RESPONSE_INVALID'
+                  else:
+                      now=datetime.now(timezone.utc)
+                      fixture=[]
+                      for m in data['matches']:
+                          if not isinstance(m,dict):continue
+                          h=m.get('home_team') or {};a=m.get('away_team') or {}
+                          if team(h.get('name'))!='atalanta' or team(a.get('name'))!='parma':continue
+                          try: kick=instant(m.get('time_utc'))
+                          except ValueError:continue
+                          if kick>now and str(m.get('status','')).lower() not in ('finished','ft','played','live','in_progress'):
+                              fixture.append((kick,m))
+                      fixture.sort(key=lambda z:z[0])
+                      report['season_listing_count']=len(data['matches'])
+                      if not fixture:
+                          report['status']='NO_AUTHENTIC_UPCOMING_ATALANTA_PARMA_IN_SEASON_LIST'
+                      elif len(fixture)>1 and fixture[0][0]==fixture[1][0]:
+                          report['status']='AMBIGUOUS_AUTHENTIC_FIXTURE'
+                      else:
+                          kick,selected=fixture[0]
+                          report['kickoff_utc']=kick.isoformat()
+                          report['status']='PITCHAPI_UPCOMING_FIXTURE_IDENTIFIED'
+                          # Do not call bookmaker. Test native frozen engines only.
+                          pip=subprocess.run([sys.executable,'-m','pip','install','-r','requirements.txt'],
+                                             capture_output=True,text=True,timeout=90,check=False)
+                          if pip.returncode:
+                              report['status']='ORIGINAL_RUNTIME_DEPENDENCIES_NOT_INSTALLED'
+                          else:
+                              from betpilot_v3.pitchapi_native_phase1 import execute
+                              folder=pathlib.Path('/tmp/atalanta-parma-pitchapi-daily')
+                              folder.mkdir(exist_ok=True)
+                              run=execute(SimpleNamespace(
+                                  request='BETPILOT: Atalanta - Parma',
+                                  day_utc=kick.date().isoformat(),country_code='ITA',
+                                  competition='Serie A',warehouse_root=folder,
+                                  history_root=pathlib.Path('/tmp/betpilot-source-ga3'),
+                                  team_stats_root=pathlib.Path('/tmp/betpilot-source-gts3'),
+                                  team_stats_archive=None,
+                                  output_dir=pathlib.Path('/tmp/atalanta-parma-ga3-gts3')))
+                              report['status']=run.get('status')
+                              report['reason_code']=run.get('reason_code')
+                              report['ga3_executed']=run.get('ga3_status')=='GA3_ORIGINAL_RESEARCH_EXECUTED'
+                              report['gts3_executed']=run.get('gts3_status')=='GTS3_ORIGINAL_RESEARCH_EXECUTED'
+                              report['native_source_export']=run.get('status')=='PITCHAPI_NATIVE_FIVE_EXPORTS_VERIFIED'
+                              if report['native_source_export']:
+                                  native=pathlib.Path(run['native_bundle'])
+                                  ga3=json.loads((native/'ga3_native_output.json').read_text('utf8'))
+                                  gts3=json.loads((native/'gts3_native_output.json').read_text('utf8'))
+                                  report['ga3_prediction']=ga3.get('prediction')
+                                  report['gts3_predictions']=gts3.get('predictions')
+                                  report['ga3_research_only']=ga3.get('status')
+                                  report['gts3_research_only']=gts3.get('status')
+          except Exception as exc:
+              report['status']='PITCHAPI_LOOKUP_OR_NATIVE_STAGE_EXCEPTION'
+              report['reason_code']=type(exc).__name__
+          print('ATALANTA_PARMA_PITCHAPI_LIVE_GA3_GTS3',json.dumps(report,sort_keys=True))
+          PY

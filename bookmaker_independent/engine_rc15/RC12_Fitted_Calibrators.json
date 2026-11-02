@@ -1,0 +1,250 @@
+{
+  "schema": "BETPILOT_RC12_MultiMarket_Calibration_v1",
+  "created": "2026-10-30",
+  "training": "2020-2023",
+  "validation": "2024",
+  "retrospective_test": "2025-2026 through 2026-10-21",
+  "source_sha256": "d933de8652d0bd620178dac415f32ae6e8abc40721360c0c0703969b66d87825",
+  "freeze_rc9_sha256": "42fc7b6fbd293ff6ac55d67ce8830f07aeb148fbf2142ca645b074b9cfb13c93",
+  "markets": {
+    "BIG5": {
+      "1X2": {
+        "parameters": 1.0421019222474328,
+        "calibrator": "temperature",
+        "selected_on_2024": "calibrated",
+        "operational_method": "direct",
+        "operational_policy": "Post-hoc conservative guardrail using 2025-26 stability; do NOT treat this as an independent unselected test or future proof.",
+        "train": {
+          "direct": {
+            "n": 4733,
+            "brier": 0.5759274377923796,
+            "logloss": 0.9698378762948462
+          },
+          "calibrated": {
+            "n": 4733,
+            "brier": 0.5758078079895956,
+            "logloss": 0.9696561373361045
+          }
+        },
+        "validation": {
+          "direct": {
+            "n": 1245,
+            "brier": 0.5674661259182507,
+            "logloss": 0.9566068513405807
+          },
+          "calibrated": {
+            "n": 1245,
+            "brier": 0.5670710542388262,
+            "logloss": 0.9558596370189033
+          }
+        },
+        "retrospective_test": {
+          "direct": {
+            "n": 2713,
+            "brier": 0.5789823718874055,
+            "logloss": 0.9731848493369203
+          },
+          "calibrated": {
+            "n": 2713,
+            "brier": 0.5787772095417356,
+            "logloss": 0.972737645857863
+          },
+          "selected": {
+            "n": 2713,
+            "brier": 0.5787772095417356,
+            "logloss": 0.972737645857863
+          },
+          "diff": {
+            "difference_brier_cal_minus_raw": -0.00020516234566978162,
+            "monthly_block_bootstrap_CI95": [
+              -0.0005691492917720548,
+              0.00014472141596217968
+            ],
+            "n_months": 18,
+            "note": "Retrospective uncertainty; not independent prospective proof"
+          }
+        }
+      },
+      "OU2_5": {
+        "parameters": [
+          0.03859533960689709,
+          1.0485414798290322
+        ],
+        "calibrator": "logistic_intercept_slope",
+        "selected_on_2024": "calibrated",
+        "operational_method": "direct",
+        "operational_policy": "Post-hoc conservative guardrail using 2025-26 stability; do NOT treat this as an independent unselected test or future proof.",
+        "train": {
+          "direct": {
+            "n": 4733,
+            "brier": 0.2394844406305316,
+            "logloss": 0.6716556507054319
+          },
+          "calibrated": {
+            "n": 4733,
+            "brier": 0.23934293867958825,
+            "logloss": 0.6713736912058558
+          }
+        },
+        "validation": {
+          "direct": {
+            "n": 1245,
+            "brier": 0.2340597710312738,
+            "logloss": 0.6606127411800149
+          },
+          "calibrated": {
+            "n": 1245,
+            "brier": 0.23356531581252993,
+            "logloss": 0.659637117707766
+          }
+        },
+        "retrospective_test": {
+          "direct": {
+            "n": 2713,
+            "brier": 0.23723575970753444,
+            "logloss": 0.6669665697954867
+          },
+          "calibrated": {
+            "n": 2713,
+            "brier": 0.23719606608288873,
+            "logloss": 0.6668558448067197
+          },
+          "selected": {
+            "n": 2713,
+            "brier": 0.23719606608288873,
+            "logloss": 0.6668558448067197
+          },
+          "diff": {
+            "difference_brier_cal_minus_raw": -3.969362464571661e-05,
+            "monthly_block_bootstrap_CI95": [
+              -0.00042395471796819844,
+              0.0003268690347136849
+            ],
+            "n_months": 18,
+            "note": "Retrospective uncertainty; not independent prospective proof"
+          }
+        }
+      }
+    },
+    "OTHER": {
+      "1X2": {
+        "parameters": 1.075049441438625,
+        "calibrator": "temperature",
+        "selected_on_2024": "calibrated",
+        "operational_method": "calibrated",
+        "operational_policy": "Post-hoc conservative guardrail using 2025-26 stability; do NOT treat this as an independent unselected test or future proof.",
+        "train": {
+          "direct": {
+            "n": 257146,
+            "brier": 0.595562310995197,
+            "logloss": 0.9968924211153152
+          },
+          "calibrated": {
+            "n": 257146,
+            "brier": 0.5953216537639279,
+            "logloss": 0.9964526580808355
+          }
+        },
+        "validation": {
+          "direct": {
+            "n": 83780,
+            "brier": 0.5916298060503893,
+            "logloss": 0.9912276312354669
+          },
+          "calibrated": {
+            "n": 83780,
+            "brier": 0.5913002587894539,
+            "logloss": 0.9906156298169113
+          }
+        },
+        "retrospective_test": {
+          "direct": {
+            "n": 162803,
+            "brier": 0.5912729531519425,
+            "logloss": 0.9906340747699638
+          },
+          "calibrated": {
+            "n": 162803,
+            "brier": 0.5907389823805567,
+            "logloss": 0.9897188869193314
+          },
+          "selected": {
+            "n": 162803,
+            "brier": 0.5907389823805567,
+            "logloss": 0.9897188869193314
+          },
+          "diff": {
+            "difference_brier_cal_minus_raw": -0.0005339707713857319,
+            "monthly_block_bootstrap_CI95": [
+              -0.0006672643378587313,
+              -0.0003833027005368964
+            ],
+            "n_months": 22,
+            "note": "Retrospective uncertainty; not independent prospective proof"
+          }
+        }
+      },
+      "OU2_5": {
+        "parameters": [
+          -0.03117466931522825,
+          1.0170096014777863
+        ],
+        "calibrator": "logistic_intercept_slope",
+        "selected_on_2024": "calibrated",
+        "operational_method": "direct",
+        "operational_policy": "Post-hoc conservative guardrail using 2025-26 stability; do NOT treat this as an independent unselected test or future proof.",
+        "train": {
+          "direct": {
+            "n": 257146,
+            "brier": 0.23801364896849445,
+            "logloss": 0.668601203287651
+          },
+          "calibrated": {
+            "n": 257146,
+            "brier": 0.23795600933257643,
+            "logloss": 0.6684826090940628
+          }
+        },
+        "validation": {
+          "direct": {
+            "n": 83780,
+            "brier": 0.23575563946883354,
+            "logloss": 0.6638298399993355
+          },
+          "calibrated": {
+            "n": 83780,
+            "brier": 0.235705710537195,
+            "logloss": 0.6637270801379568
+          }
+        },
+        "retrospective_test": {
+          "direct": {
+            "n": 162803,
+            "brier": 0.2350980652463732,
+            "logloss": 0.6624823395097167
+          },
+          "calibrated": {
+            "n": 162803,
+            "brier": 0.23515968251984506,
+            "logloss": 0.6626106865090458
+          },
+          "selected": {
+            "n": 162803,
+            "brier": 0.23515968251984506,
+            "logloss": 0.6626106865090458
+          },
+          "diff": {
+            "difference_brier_cal_minus_raw": 6.161727347185195e-05,
+            "monthly_block_bootstrap_CI95": [
+              2.0618341820801073e-05,
+              0.00010187955575007388
+            ],
+            "n_months": 22,
+            "note": "Retrospective uncertainty; not independent prospective proof"
+          }
+        }
+      }
+    }
+  },
+  "note": "Training only through 2023; choose a calibrator only on 2024. Historical test already explored in RC8/9; NOT blind."
+}

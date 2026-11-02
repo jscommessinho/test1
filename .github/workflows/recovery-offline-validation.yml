@@ -1,0 +1,49 @@
+name: BETPILOT Recovery | Offline full-engine regression
+on:
+  push:
+    branches:
+      - 'recovery/**'
+    paths:
+      - '.github/workflows/recovery-offline-validation.yml'
+      - 'integration/**'
+      - 'bookmaker_independent/**'
+      - 'tests/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recovery-offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      NUMBA_NUM_THREADS: '4'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install original test and numerical dependencies
+        run: |
+          python -m pip install --disable-pip-version-check numpy scipy
+          python -m pip install --disable-pip-version-check -r bookmaker_independent/requirements.txt
+      - name: Verify database, original GA3 engine and derived markets offline
+        run: python -m unittest discover -s tests -v
+      - name: Original Bookmaker RC15 mathematical regression
+        working-directory: bookmaker_independent
+        run: python -m unittest discover -s engine_rc15 -p 'test_*.py' -v
+      - name: Isolated Bookmaker wrapper regression
+        working-directory: bookmaker_independent
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Execute original RC15 and Verdetto C on the original example CSV
+        working-directory: bookmaker_independent
+        run: python -m bookmaker --input-csv engine_rc15/RC15_Input_7_Quote_Example.csv --output-dir output/recovery_smoke
+      - name: Upload research-only offline results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-offline-evidence
+          path: bookmaker_independent/output/recovery_smoke/
+          if-no-files-found: warn
+          retention-days: 14
