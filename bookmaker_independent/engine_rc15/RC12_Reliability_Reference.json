@@ -1,0 +1,1243 @@
+{
+  "schema": "BETPILOT_RC12_Bins_v1",
+  "source_sha256": "d933de8652d0bd620178dac415f32ae6e8abc40721360c0c0703969b66d87825",
+  "markets": {
+    "BIG5": {
+      "1X2": {
+        "scope": "BIG5",
+        "market": "1X2",
+        "period": "2025-2026",
+        "note": "Bin counts represent distinct fixtures per event. Descriptive 2025–2026 frequencies, not individual-event confidence or forward validation.",
+        "by_event": {
+          "1": {
+            "n": 2713,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 43,
+                "mean_prediction": 0.08198868915857817,
+                "observed_frequency": 0.046511627906976744,
+                "mean_bias_pp": -3.5477061251601425
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 243,
+                "mean_prediction": 0.15918257634090663,
+                "observed_frequency": 0.14814814814814814,
+                "mean_bias_pp": -1.1034428192758488
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 376,
+                "mean_prediction": 0.2543481043048451,
+                "observed_frequency": 0.23670212765957446,
+                "mean_bias_pp": -1.7645976645270651
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 501,
+                "mean_prediction": 0.35035809099663695,
+                "observed_frequency": 0.32335329341317365,
+                "mean_bias_pp": -2.7004797583463303
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 550,
+                "mean_prediction": 0.44539857193365195,
+                "observed_frequency": 0.4581818181818182,
+                "mean_bias_pp": 1.2783246248166236
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 442,
+                "mean_prediction": 0.545561570690517,
+                "observed_frequency": 0.5158371040723982,
+                "mean_bias_pp": -2.9724466618118783
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 290,
+                "mean_prediction": 0.6495827480216018,
+                "observed_frequency": 0.6275862068965518,
+                "mean_bias_pp": -2.1996541125050006
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 195,
+                "mean_prediction": 0.7443184698839586,
+                "observed_frequency": 0.7692307692307693,
+                "mean_bias_pp": 2.491229934681072
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 70,
+                "mean_prediction": 0.8401092715771998,
+                "observed_frequency": 0.9285714285714286,
+                "mean_bias_pp": 8.846215699422878
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 3,
+                "mean_prediction": 0.9213722107414055,
+                "observed_frequency": 1.0,
+                "mean_bias_pp": 7.862778925859448
+              }
+            ]
+          },
+          "X": {
+            "n": 2713,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 33,
+                "mean_prediction": 0.08250208095320825,
+                "observed_frequency": 0.06060606060606061,
+                "mean_bias_pp": -2.1896020347147647
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 431,
+                "mean_prediction": 0.16240454768940066,
+                "observed_frequency": 0.16473317865429235,
+                "mean_bias_pp": 0.23286309648916925
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 1915,
+                "mean_prediction": 0.2549300087741684,
+                "observed_frequency": 0.2579634464751958,
+                "mean_bias_pp": 0.30334377010274305
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 334,
+                "mean_prediction": 0.31585085297716087,
+                "observed_frequency": 0.31736526946107785,
+                "mean_bias_pp": 0.15144164839169805
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              }
+            ]
+          },
+          "2": {
+            "n": 2713,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 195,
+                "mean_prediction": 0.07461844211873633,
+                "observed_frequency": 0.046153846153846156,
+                "mean_bias_pp": -2.8464595964890176
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 559,
+                "mean_prediction": 0.1536329700221377,
+                "observed_frequency": 0.16636851520572452,
+                "mean_bias_pp": 1.2735545183586827
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 691,
+                "mean_prediction": 0.24906813937819758,
+                "observed_frequency": 0.2460202604920405,
+                "mean_bias_pp": -0.3047878886157068
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 530,
+                "mean_prediction": 0.3443904204264798,
+                "observed_frequency": 0.34150943396226413,
+                "mean_bias_pp": -0.28809864642156957
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 314,
+                "mean_prediction": 0.44475019604543775,
+                "observed_frequency": 0.5031847133757962,
+                "mean_bias_pp": 5.843451733035843
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 230,
+                "mean_prediction": 0.5460510794851356,
+                "observed_frequency": 0.5652173913043478,
+                "mean_bias_pp": 1.9166311819212134
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 130,
+                "mean_prediction": 0.6409766287367306,
+                "observed_frequency": 0.6076923076923076,
+                "mean_bias_pp": -3.3284321044422915
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 55,
+                "mean_prediction": 0.7451993229626702,
+                "observed_frequency": 0.8181818181818182,
+                "mean_bias_pp": 7.298249521914801
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 9,
+                "mean_prediction": 0.8226431277180685,
+                "observed_frequency": 0.6666666666666666,
+                "mean_bias_pp": -15.597646105140184
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              }
+            ]
+          },
+          "1X": {
+            "n": 2713,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 9,
+                "mean_prediction": 0.17735687228193153,
+                "observed_frequency": 0.3333333333333333,
+                "mean_bias_pp": 15.597646105140178
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 55,
+                "mean_prediction": 0.25480067703732984,
+                "observed_frequency": 0.18181818181818182,
+                "mean_bias_pp": -7.298249521914801
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 130,
+                "mean_prediction": 0.35902337126326944,
+                "observed_frequency": 0.3923076923076923,
+                "mean_bias_pp": 3.328432104442286
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 230,
+                "mean_prediction": 0.4539489205148643,
+                "observed_frequency": 0.43478260869565216,
+                "mean_bias_pp": -1.9166311819212134
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 314,
+                "mean_prediction": 0.5552498039545622,
+                "observed_frequency": 0.4968152866242038,
+                "mean_bias_pp": -5.843451733035843
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 530,
+                "mean_prediction": 0.6556095795735202,
+                "observed_frequency": 0.6584905660377358,
+                "mean_bias_pp": 0.288098646421564
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 691,
+                "mean_prediction": 0.7509318606218023,
+                "observed_frequency": 0.7539797395079595,
+                "mean_bias_pp": 0.3047878886157207
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 559,
+                "mean_prediction": 0.8463670299778623,
+                "observed_frequency": 0.8336314847942755,
+                "mean_bias_pp": -1.2735545183586772
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 195,
+                "mean_prediction": 0.9253815578812636,
+                "observed_frequency": 0.9538461538461539,
+                "mean_bias_pp": 2.846459596489026
+              }
+            ]
+          },
+          "X2": {
+            "n": 2713,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 3,
+                "mean_prediction": 0.07862778925859454,
+                "observed_frequency": 0.0,
+                "mean_bias_pp": -7.862778925859454
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 70,
+                "mean_prediction": 0.1598907284228002,
+                "observed_frequency": 0.07142857142857142,
+                "mean_bias_pp": -8.846215699422878
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 195,
+                "mean_prediction": 0.25568153011604144,
+                "observed_frequency": 0.23076923076923078,
+                "mean_bias_pp": -2.4912299346810665
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 290,
+                "mean_prediction": 0.35041725197839824,
+                "observed_frequency": 0.3724137931034483,
+                "mean_bias_pp": 2.199654112505006
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 442,
+                "mean_prediction": 0.45443842930948297,
+                "observed_frequency": 0.4841628959276018,
+                "mean_bias_pp": 2.972446661811884
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 550,
+                "mean_prediction": 0.5546014280663479,
+                "observed_frequency": 0.5418181818181819,
+                "mean_bias_pp": -1.278324624816607
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 501,
+                "mean_prediction": 0.6496419090033632,
+                "observed_frequency": 0.6766467065868264,
+                "mean_bias_pp": 2.700479758346319
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 376,
+                "mean_prediction": 0.7456518956951549,
+                "observed_frequency": 0.7632978723404256,
+                "mean_bias_pp": 1.7645976645270678
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 243,
+                "mean_prediction": 0.8408174236590933,
+                "observed_frequency": 0.8518518518518519,
+                "mean_bias_pp": 1.1034428192758572
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 43,
+                "mean_prediction": 0.918011310841422,
+                "observed_frequency": 0.9534883720930233,
+                "mean_bias_pp": 3.5477061251601327
+              }
+            ]
+          },
+          "12": {
+            "n": 2713,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 334,
+                "mean_prediction": 0.6841491470228392,
+                "observed_frequency": 0.6826347305389222,
+                "mean_bias_pp": -0.1514416483917036
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 1915,
+                "mean_prediction": 0.7450699912258317,
+                "observed_frequency": 0.7420365535248041,
+                "mean_bias_pp": -0.3033437701027597
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 431,
+                "mean_prediction": 0.8375954523105995,
+                "observed_frequency": 0.8352668213457076,
+                "mean_bias_pp": -0.23286309648918868
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 33,
+                "mean_prediction": 0.9174979190467918,
+                "observed_frequency": 0.9393939393939394,
+                "mean_bias_pp": 2.189602034714766
+              }
+            ]
+          }
+        }
+      },
+      "OU2_5": {
+        "scope": "BIG5",
+        "market": "OU2_5",
+        "period": "2025-2026",
+        "note": "Bin counts represent distinct fixtures per event. Descriptive 2025–2026 frequencies, not individual-event confidence or forward validation.",
+        "by_event": {
+          "Over_2_5": {
+            "n": 2713,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 31,
+                "mean_prediction": 0.2823691378376795,
+                "observed_frequency": 0.25806451612903225,
+                "mean_bias_pp": -2.4304621708647223
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 160,
+                "mean_prediction": 0.36260502280151397,
+                "observed_frequency": 0.41875,
+                "mean_bias_pp": 5.614497719848605
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 708,
+                "mean_prediction": 0.44822260104153366,
+                "observed_frequency": 0.4293785310734463,
+                "mean_bias_pp": -1.8844069968087351
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 973,
+                "mean_prediction": 0.5430119217983816,
+                "observed_frequency": 0.5231243576567317,
+                "mean_bias_pp": -1.9887564141649938
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 661,
+                "mean_prediction": 0.6378310631080494,
+                "observed_frequency": 0.6656580937972768,
+                "mean_bias_pp": 2.7827030689227428
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 164,
+                "mean_prediction": 0.743981246415925,
+                "observed_frequency": 0.6890243902439024,
+                "mean_bias_pp": -5.495685617202262
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 16,
+                "mean_prediction": 0.8310794260938867,
+                "observed_frequency": 0.9375,
+                "mean_bias_pp": 10.642057390611326
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              }
+            ]
+          },
+          "Under_2_5": {
+            "n": 2713,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 16,
+                "mean_prediction": 0.1689205739061133,
+                "observed_frequency": 0.0625,
+                "mean_bias_pp": -10.642057390611331
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 164,
+                "mean_prediction": 0.25601875358407505,
+                "observed_frequency": 0.31097560975609756,
+                "mean_bias_pp": 5.49568561720225
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 661,
+                "mean_prediction": 0.3621689368919507,
+                "observed_frequency": 0.33434190620272314,
+                "mean_bias_pp": -2.782703068922754
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 973,
+                "mean_prediction": 0.4569880782016184,
+                "observed_frequency": 0.47687564234326824,
+                "mean_bias_pp": 1.9887564141649827
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 708,
+                "mean_prediction": 0.5517773989584663,
+                "observed_frequency": 0.5706214689265536,
+                "mean_bias_pp": 1.8844069968087296
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 160,
+                "mean_prediction": 0.6373949771984861,
+                "observed_frequency": 0.58125,
+                "mean_bias_pp": -5.61449771984861
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 31,
+                "mean_prediction": 0.7176308621623207,
+                "observed_frequency": 0.7419354838709677,
+                "mean_bias_pp": 2.4304621708647
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              }
+            ]
+          }
+        }
+      }
+    },
+    "OTHER": {
+      "1X2": {
+        "scope": "OTHER",
+        "market": "1X2",
+        "period": "2025-2026",
+        "note": "Bin counts represent distinct fixtures per event. Descriptive 2025–2026 frequencies, not individual-event confidence or forward validation.",
+        "by_event": {
+          "1": {
+            "n": 162803,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 2222,
+                "mean_prediction": 0.06677071618213656,
+                "observed_frequency": 0.0612061206120612,
+                "mean_bias_pp": -0.556459557007536
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 10785,
+                "mean_prediction": 0.15920684774364585,
+                "observed_frequency": 0.14844691701437182,
+                "mean_bias_pp": -1.0759930729274032
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 22015,
+                "mean_prediction": 0.2550625838115409,
+                "observed_frequency": 0.2496479672950261,
+                "mean_bias_pp": -0.5414616516514786
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 33801,
+                "mean_prediction": 0.3526661605978805,
+                "observed_frequency": 0.3454631519777521,
+                "mean_bias_pp": -0.7203008620128348
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 38121,
+                "mean_prediction": 0.44758113846175696,
+                "observed_frequency": 0.44311534324912777,
+                "mean_bias_pp": -0.44657952126291867
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 29521,
+                "mean_prediction": 0.5465484354652231,
+                "observed_frequency": 0.5468988177907252,
+                "mean_bias_pp": 0.03503823255021077
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 17272,
+                "mean_prediction": 0.6436259643425934,
+                "observed_frequency": 0.6665701713756369,
+                "mean_bias_pp": 2.294420703304345
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 6566,
+                "mean_prediction": 0.7409951205515628,
+                "observed_frequency": 0.7605848309473043,
+                "mean_bias_pp": 1.9589710395741533
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 2056,
+                "mean_prediction": 0.8396949722879957,
+                "observed_frequency": 0.8545719844357976,
+                "mean_bias_pp": 1.4877012147801905
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 444,
+                "mean_prediction": 0.926565053394215,
+                "observed_frequency": 0.954954954954955,
+                "mean_bias_pp": 2.838990156073995
+              }
+            ]
+          },
+          "X": {
+            "n": 162803,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 1688,
+                "mean_prediction": 0.07171300213174943,
+                "observed_frequency": 0.06457345971563981,
+                "mean_bias_pp": -0.7139542416109618
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 23374,
+                "mean_prediction": 0.17001156080913202,
+                "observed_frequency": 0.16428510310601524,
+                "mean_bias_pp": -0.5726457703116777
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 120783,
+                "mean_prediction": 0.25232373414199816,
+                "observed_frequency": 0.2595315565932292,
+                "mean_bias_pp": 0.7207822451231027
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 16924,
+                "mean_prediction": 0.3200995515720947,
+                "observed_frequency": 0.3394587567950839,
+                "mean_bias_pp": 1.9359205222989229
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 34,
+                "mean_prediction": 0.41270319084647816,
+                "observed_frequency": 0.5294117647058824,
+                "mean_bias_pp": 11.670857385940419
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              }
+            ]
+          },
+          "2": {
+            "n": 162803,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 6328,
+                "mean_prediction": 0.06952173668799941,
+                "observed_frequency": 0.05009481668773704,
+                "mean_bias_pp": -1.9426920000262367
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 31899,
+                "mean_prediction": 0.15719093638051507,
+                "observed_frequency": 0.14527101163045864,
+                "mean_bias_pp": -1.1919924750056432
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 45529,
+                "mean_prediction": 0.2511103793213379,
+                "observed_frequency": 0.24364690636737024,
+                "mean_bias_pp": -0.7463472953967654
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 35963,
+                "mean_prediction": 0.3461846537579274,
+                "observed_frequency": 0.3398214831910575,
+                "mean_bias_pp": -0.6363170566869913
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 21251,
+                "mean_prediction": 0.4445846176762972,
+                "observed_frequency": 0.4420497858924286,
+                "mean_bias_pp": -0.25348317838685963
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 12264,
+                "mean_prediction": 0.5452862746825424,
+                "observed_frequency": 0.5481082844096543,
+                "mean_bias_pp": 0.2822009727111885
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 6176,
+                "mean_prediction": 0.6429435548505369,
+                "observed_frequency": 0.6497733160621761,
+                "mean_bias_pp": 0.6829761211639251
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 2341,
+                "mean_prediction": 0.7414988779507092,
+                "observed_frequency": 0.7671935070482699,
+                "mean_bias_pp": 2.5694629097560706
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 832,
+                "mean_prediction": 0.8406928083955035,
+                "observed_frequency": 0.8569711538461539,
+                "mean_bias_pp": 1.6278345450650322
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 220,
+                "mean_prediction": 0.9282813700460159,
+                "observed_frequency": 0.9363636363636364,
+                "mean_bias_pp": 0.8082266317620546
+              }
+            ]
+          },
+          "1X": {
+            "n": 162803,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 220,
+                "mean_prediction": 0.07171862995398415,
+                "observed_frequency": 0.06363636363636363,
+                "mean_bias_pp": -0.8082266317620518
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 832,
+                "mean_prediction": 0.15930719160449638,
+                "observed_frequency": 0.14302884615384615,
+                "mean_bias_pp": -1.6278345450650238
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 2341,
+                "mean_prediction": 0.25850112204929077,
+                "observed_frequency": 0.23280649295173003,
+                "mean_bias_pp": -2.5694629097560733
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 6176,
+                "mean_prediction": 0.35705644514946305,
+                "observed_frequency": 0.35022668393782386,
+                "mean_bias_pp": -0.6829761211639196
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 12264,
+                "mean_prediction": 0.4547137253174575,
+                "observed_frequency": 0.45189171559034574,
+                "mean_bias_pp": -0.2822009727111774
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 21251,
+                "mean_prediction": 0.5554153823237028,
+                "observed_frequency": 0.5579502141075714,
+                "mean_bias_pp": 0.25348317838685963
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 35963,
+                "mean_prediction": 0.6538153462420726,
+                "observed_frequency": 0.6601785168089426,
+                "mean_bias_pp": 0.6363170566869969
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 45529,
+                "mean_prediction": 0.7488896206786623,
+                "observed_frequency": 0.7563530936326297,
+                "mean_bias_pp": 0.7463472953967432
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 31899,
+                "mean_prediction": 0.8428090636194849,
+                "observed_frequency": 0.8547289883695414,
+                "mean_bias_pp": 1.1919924750056432
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 6328,
+                "mean_prediction": 0.9304782633120006,
+                "observed_frequency": 0.9499051833122629,
+                "mean_bias_pp": 1.942692000026236
+              }
+            ]
+          },
+          "X2": {
+            "n": 162803,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 444,
+                "mean_prediction": 0.07343494660578488,
+                "observed_frequency": 0.04504504504504504,
+                "mean_bias_pp": -2.838990156073984
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 2056,
+                "mean_prediction": 0.1603050277120043,
+                "observed_frequency": 0.14542801556420235,
+                "mean_bias_pp": -1.487701214780196
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 6566,
+                "mean_prediction": 0.25900487944843714,
+                "observed_frequency": 0.2394151690526957,
+                "mean_bias_pp": -1.9589710395741449
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 17272,
+                "mean_prediction": 0.3563740356574066,
+                "observed_frequency": 0.33342982862436316,
+                "mean_bias_pp": -2.294420703304345
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 29521,
+                "mean_prediction": 0.45345156453477686,
+                "observed_frequency": 0.45310118220927476,
+                "mean_bias_pp": -0.03503823255021077
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 38121,
+                "mean_prediction": 0.552418861538243,
+                "observed_frequency": 0.5568846567508722,
+                "mean_bias_pp": 0.4465795212629131
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 33801,
+                "mean_prediction": 0.6473338394021195,
+                "observed_frequency": 0.6545368480222479,
+                "mean_bias_pp": 0.7203008620128348
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 22015,
+                "mean_prediction": 0.7449374161884592,
+                "observed_frequency": 0.7503520327049739,
+                "mean_bias_pp": 0.5414616516514648
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 10785,
+                "mean_prediction": 0.8407931522563542,
+                "observed_frequency": 0.8515530829856282,
+                "mean_bias_pp": 1.0759930729273948
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 2222,
+                "mean_prediction": 0.9332292838178633,
+                "observed_frequency": 0.9387938793879388,
+                "mean_bias_pp": 0.5564595570075492
+              }
+            ]
+          },
+          "12": {
+            "n": 162803,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 0,
+                "mean_prediction": null,
+                "observed_frequency": null,
+                "mean_bias_pp": null
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 34,
+                "mean_prediction": 0.5872968091535219,
+                "observed_frequency": 0.47058823529411764,
+                "mean_bias_pp": -11.670857385940426
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 16924,
+                "mean_prediction": 0.6799004484279052,
+                "observed_frequency": 0.6605412432049161,
+                "mean_bias_pp": -1.9359205222989062
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 120783,
+                "mean_prediction": 0.7476762658580018,
+                "observed_frequency": 0.7404684434067709,
+                "mean_bias_pp": -0.7207822451230972
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 23374,
+                "mean_prediction": 0.829988439190868,
+                "observed_frequency": 0.8357148968939848,
+                "mean_bias_pp": 0.5726457703116861
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 1688,
+                "mean_prediction": 0.9282869978682506,
+                "observed_frequency": 0.9354265402843602,
+                "mean_bias_pp": 0.713954241610959
+              }
+            ]
+          }
+        }
+      },
+      "OU2_5": {
+        "scope": "OTHER",
+        "market": "OU2_5",
+        "period": "2025-2026",
+        "note": "Bin counts represent distinct fixtures per event. Descriptive 2025–2026 frequencies, not individual-event confidence or forward validation.",
+        "by_event": {
+          "Over_2_5": {
+            "n": 162803,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 1,
+                "mean_prediction": 0.090154601682966,
+                "observed_frequency": 1.0,
+                "mean_bias_pp": 90.9845398317034
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 5,
+                "mean_prediction": 0.19082421536833874,
+                "observed_frequency": 0.4,
+                "mean_bias_pp": 20.917578463166127
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 3474,
+                "mean_prediction": 0.2689130714261368,
+                "observed_frequency": 0.2725964306275187,
+                "mean_bias_pp": 0.36833592013819083
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 23836,
+                "mean_prediction": 0.35188871824382695,
+                "observed_frequency": 0.3528696089947978,
+                "mean_bias_pp": 0.09808907509708531
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 54315,
+                "mean_prediction": 0.4513440582781363,
+                "observed_frequency": 0.45847371812574794,
+                "mean_bias_pp": 0.7129659847611658
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 42558,
+                "mean_prediction": 0.5488085114405624,
+                "observed_frequency": 0.561234080548898,
+                "mean_bias_pp": 1.2425569108335588
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 27421,
+                "mean_prediction": 0.6352291048082634,
+                "observed_frequency": 0.6510703475438533,
+                "mean_bias_pp": 1.5841242735589844
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 10311,
+                "mean_prediction": 0.7360488042914407,
+                "observed_frequency": 0.7442537096304918,
+                "mean_bias_pp": 0.820490533905105
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 850,
+                "mean_prediction": 0.8385359219705022,
+                "observed_frequency": 0.8541176470588235,
+                "mean_bias_pp": 1.558172508832134
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 32,
+                "mean_prediction": 0.9144475531465701,
+                "observed_frequency": 0.78125,
+                "mean_bias_pp": -13.319755314657012
+              }
+            ]
+          },
+          "Under_2_5": {
+            "n": 162803,
+            "bins": [
+              {
+                "bucket": "0-10%",
+                "matches": 32,
+                "mean_prediction": 0.08555244685342997,
+                "observed_frequency": 0.21875,
+                "mean_bias_pp": 13.319755314657003
+              },
+              {
+                "bucket": "10-20%",
+                "matches": 850,
+                "mean_prediction": 0.1614640780294979,
+                "observed_frequency": 0.14588235294117646,
+                "mean_bias_pp": -1.5581725088321425
+              },
+              {
+                "bucket": "20-30%",
+                "matches": 10311,
+                "mean_prediction": 0.2639511957085594,
+                "observed_frequency": 0.2557462903695083,
+                "mean_bias_pp": -0.8204905339051105
+              },
+              {
+                "bucket": "30-40%",
+                "matches": 27421,
+                "mean_prediction": 0.3647708951917366,
+                "observed_frequency": 0.34892965245614677,
+                "mean_bias_pp": -1.5841242735589844
+              },
+              {
+                "bucket": "40-50%",
+                "matches": 42558,
+                "mean_prediction": 0.45119148855943764,
+                "observed_frequency": 0.43876591945110205,
+                "mean_bias_pp": -1.2425569108335588
+              },
+              {
+                "bucket": "50-60%",
+                "matches": 54315,
+                "mean_prediction": 0.5486559417218637,
+                "observed_frequency": 0.541526281874252,
+                "mean_bias_pp": -0.7129659847611713
+              },
+              {
+                "bucket": "60-70%",
+                "matches": 23836,
+                "mean_prediction": 0.648111281756173,
+                "observed_frequency": 0.6471303910052022,
+                "mean_bias_pp": -0.09808907509708531
+              },
+              {
+                "bucket": "70-80%",
+                "matches": 3474,
+                "mean_prediction": 0.7310869285738633,
+                "observed_frequency": 0.7274035693724813,
+                "mean_bias_pp": -0.3683359201381964
+              },
+              {
+                "bucket": "80-90%",
+                "matches": 5,
+                "mean_prediction": 0.8091757846316613,
+                "observed_frequency": 0.6,
+                "mean_bias_pp": -20.91757846316613
+              },
+              {
+                "bucket": "90-100%",
+                "matches": 1,
+                "mean_prediction": 0.909845398317034,
+                "observed_frequency": 0.0,
+                "mean_bias_pp": -90.9845398317034
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "note": "Descriptive bin frequencies on retrospective 2025-2026 test, not certified model confidence."
+}

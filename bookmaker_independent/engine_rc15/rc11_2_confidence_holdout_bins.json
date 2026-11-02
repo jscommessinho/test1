@@ -1,0 +1,219 @@
+{
+  "schema": "BETPILOT_RC11_2_RELIABILITY_BINS_V1",
+  "source_sha256": "d933de8652d0bd620178dac415f32ae6e8abc40721360c0c0703969b66d87825",
+  "frozen_protocol_sha256": "42fc7b6fbd293ff6ac55d67ce8830f07aeb148fbf2142ca645b074b9cfb13c93",
+  "source_period": "2025-2026 through 2026-10-21 (retrospective; not new forward matches)",
+  "note": "Group-level reference bins: CI is interval of observed GG frequency, not CI of individual fixture risk; evaluation bins are retrospective exploratory summaries.",
+  "by_group": {
+    "BIG5": {
+      "n": 2713,
+      "bins": {
+        "0": {
+          "n": 0,
+          "mean_pred": null,
+          "observed_GG": null,
+          "observed_wilson95": [
+            null,
+            null
+          ],
+          "bias_pp": null
+        },
+        "1": {
+          "n": 0,
+          "mean_pred": null,
+          "observed_GG": null,
+          "observed_wilson95": [
+            null,
+            null
+          ],
+          "bias_pp": null
+        },
+        "2": {
+          "n": 0,
+          "mean_pred": null,
+          "observed_GG": null,
+          "observed_wilson95": [
+            null,
+            null
+          ],
+          "bias_pp": null
+        },
+        "3": {
+          "n": 67,
+          "mean_pred": 0.37742408782704806,
+          "observed_GG": 0.40298507462686567,
+          "observed_wilson95": [
+            0.293905,
+            0.522587
+          ],
+          "bias_pp": 2.556
+        },
+        "4": {
+          "n": 747,
+          "mean_pred": 0.46015339789562254,
+          "observed_GG": 0.48460508701472554,
+          "observed_wilson95": [
+            0.448937,
+            0.520431
+          ],
+          "bias_pp": 2.445
+        },
+        "5": {
+          "n": 1468,
+          "mean_pred": 0.5438711725522548,
+          "observed_GG": 0.5551771117166212,
+          "observed_wilson95": [
+            0.529645,
+            0.580421
+          ],
+          "bias_pp": 1.131
+        },
+        "6": {
+          "n": 407,
+          "mean_pred": 0.6290762781534156,
+          "observed_GG": 0.6609336609336609,
+          "observed_wilson95": [
+            0.613629,
+            0.705229
+          ],
+          "bias_pp": 3.186
+        },
+        "7": {
+          "n": 24,
+          "mean_pred": 0.7164575134788834,
+          "observed_GG": 0.6666666666666666,
+          "observed_wilson95": [
+            0.467063,
+            0.820278
+          ],
+          "bias_pp": -4.979
+        },
+        "8": {
+          "n": 0,
+          "mean_pred": null,
+          "observed_GG": null,
+          "observed_wilson95": [
+            null,
+            null
+          ],
+          "bias_pp": null
+        },
+        "9": {
+          "n": 0,
+          "mean_pred": null,
+          "observed_GG": null,
+          "observed_wilson95": [
+            null,
+            null
+          ],
+          "bias_pp": null
+        }
+      }
+    },
+    "OTHER": {
+      "n": 162803,
+      "bins": {
+        "0": {
+          "n": 0,
+          "mean_pred": null,
+          "observed_GG": null,
+          "observed_wilson95": [
+            null,
+            null
+          ],
+          "bias_pp": null
+        },
+        "1": {
+          "n": 5,
+          "mean_pred": 0.1292974697380693,
+          "observed_GG": 0.4,
+          "observed_wilson95": [
+            0.117621,
+            0.769276
+          ],
+          "bias_pp": 27.07
+        },
+        "2": {
+          "n": 193,
+          "mean_pred": 0.2753761722417593,
+          "observed_GG": 0.3160621761658031,
+          "observed_wilson95": [
+            0.254602,
+            0.384702
+          ],
+          "bias_pp": 4.069
+        },
+        "3": {
+          "n": 10199,
+          "mean_pred": 0.3796070250873911,
+          "observed_GG": 0.38327286988920484,
+          "observed_wilson95": [
+            0.373883,
+            0.392751
+          ],
+          "bias_pp": 0.367
+        },
+        "4": {
+          "n": 53488,
+          "mean_pred": 0.4563812701074712,
+          "observed_GG": 0.46167364642536646,
+          "observed_wilson95": [
+            0.457452,
+            0.465901
+          ],
+          "bias_pp": 0.529
+        },
+        "5": {
+          "n": 81301,
+          "mean_pred": 0.5449692073537592,
+          "observed_GG": 0.5571764184942375,
+          "observed_wilson95": [
+            0.553759,
+            0.560588
+          ],
+          "bias_pp": 1.221
+        },
+        "6": {
+          "n": 16534,
+          "mean_pred": 0.634833209986758,
+          "observed_GG": 0.650780210475384,
+          "observed_wilson95": [
+            0.643479,
+            0.658011
+          ],
+          "bias_pp": 1.595
+        },
+        "7": {
+          "n": 1079,
+          "mean_pred": 0.7184697142541968,
+          "observed_GG": 0.742354031510658,
+          "observed_wilson95": [
+            0.715432,
+            0.767557
+          ],
+          "bias_pp": 2.388
+        },
+        "8": {
+          "n": 4,
+          "mean_pred": 0.8235940558310977,
+          "observed_GG": 1.0,
+          "observed_wilson95": [
+            0.510109,
+            1
+          ],
+          "bias_pp": 17.641
+        },
+        "9": {
+          "n": 0,
+          "mean_pred": null,
+          "observed_GG": null,
+          "observed_wilson95": [
+            null,
+            null
+          ],
+          "bias_pp": null
+        }
+      }
+    }
+  }
+}
