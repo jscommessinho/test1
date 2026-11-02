@@ -115,6 +115,13 @@ def execute(request, *, output_dir: Path, sources_root: Path | None = None,
         timestamp = now or datetime.now(timezone.utc)
         if timestamp.tzinfo is None or timestamp.utcoffset() is None:
             raise ValueError("Current time requires UTC offset")
+        # Report actual original SQLite availability, even when a later provider
+        # request fails. A missing field used to be misread as "zero mounted".
+        result["pitchapi_sqlite_archives_found"] = 0
+        if sqlite_root is not None and Path(sqlite_root).is_dir():
+            from betpilot_v3.sqlite_source import _files
+            result["pitchapi_sqlite_archives_found"] = sum(
+                1 for _ in _files(Path(sqlite_root)))
         # The original final analyzer validates native source identities and all
         # output manifests; the launcher must not bypass those gates.
         native_result = None
