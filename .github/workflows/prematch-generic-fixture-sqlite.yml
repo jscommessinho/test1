@@ -92,3 +92,31 @@ jobs:
           assert fixture_archives>0,'No original fixture index present'
           print('PRIVATE_ORIGINAL_SQLITE_READ_ONLY_VERIFIED', fixture_archives)
           PY
+
+      - name: Assess original aggregate PitchAPI xG and archived endpoints without exporting records
+        if: steps.condition.outputs.ready == 'true'
+        run: |
+          python - <<'PY'
+          import sqlite3
+          from pathlib import Path
+          from urllib.parse import quote
+          tally={'archives':0,'finished_fixtures':0,'stats_rows':0,'xg_metric_rows':0,'responses':0}
+          datasets=set()
+          for p in Path('private_pitchapi/data').glob('*/*.sqlite'):
+              con=sqlite3.connect('file:'+quote(str(p.resolve()),safe='/')+'?mode=ro',uri=True)
+              con.execute('PRAGMA query_only=ON')
+              tables={r[0] for r in con.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+              tally['archives']+=1
+              if 'fixtures' in tables:
+                  tally['finished_fixtures']+=con.execute("SELECT count(*) FROM fixtures WHERE lower(fixture_status) IN ('finished','ft','played','complete','completed')").fetchone()[0]
+              if 'match_team_stats' in tables:
+                  tally['stats_rows']+=con.execute("SELECT count(*) FROM match_team_stats").fetchone()[0]
+                  tally['xg_metric_rows']+=con.execute("SELECT count(*) FROM match_team_stats WHERE lower(metric_key) LIKE '%xg%' OR lower(metric_key) LIKE '%expected%goal%'").fetchone()[0]
+              if 'source_responses' in tables:
+                  tally['responses']+=con.execute("SELECT count(*) FROM source_responses").fetchone()[0]
+                  datasets.update(x[0] for x in con.execute("SELECT DISTINCT dataset FROM source_responses"))
+              con.close()
+          print('ORIGINAL_PITCHAPI_SCHEMA_COUNTS',tally)
+          print('ORIGINAL_PITCHAPI_DATASETS',sorted(datasets))
+          print('Original archive rows were counted in read-only mode, not exported')
+          PY
