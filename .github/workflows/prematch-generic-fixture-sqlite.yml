@@ -4,6 +4,8 @@ on:
     branches: ['recovery/**']
     paths:
       - 'betpilot_v3/sqlite_source.py'
+      - 'betpilot_v3/sqlite_native_export.py'
+      - 'tests/test_sqlite_native_export.py'
       - 'betpilot_v3/private_sqlite_mount.py'
       - 'betpilot_v3/fixture_autodiscovery.py'
       - 'betpilot_v3/command.py'
@@ -36,6 +38,8 @@ jobs:
           manifest=json.loads(Path('betpilot_v3/SOURCE_ZIPS_SHA256.json').read_text('utf8'))
           print('Manifest records',len(manifest))
           PY
+      - name: Verify original SQLite to pinned GTS3-native bridge with security cases
+        run: python -m unittest tests.test_sqlite_native_export -v
       - name: Verify any-match CLI refuses invented fixture and quota inputs
         run: |
           python - <<'PY'
@@ -164,4 +168,19 @@ jobs:
               print('PITCHAPI_ORIGINAL_STAT_TEAM_IDS_PRESENT', isinstance(data.get('home_team'),dict),isinstance(data.get('away_team'),dict))
               print('PITCHAPI_ORIGINAL_DATA_MATCH_ID_VALID',str(data.get('match_id','')).startswith('m_'))
           db.close()
+          PY
+      - name: Materialize authenticated original database into GA3 and GTS3 source adapters
+        if: steps.condition.outputs.ready == 'true'
+        run: |
+          python -m betpilot_v3.sqlite_native_export --sqlite-root private_pitchapi/data --history-root /tmp/betpilot-source-ga3 --team-stats-root /tmp/betpilot-source-gts3 --output /tmp/betpilot-sqlite-native-audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          audit=json.loads(Path('/tmp/betpilot-sqlite-native-audit.json').read_text('utf8'))
+          assert audit['status']=='PITCHAPI_SQLITE_NATIVE_INPUTS_MATERIALIZED'
+          assert audit['raw_response_hashes_verified']>0
+          assert sum(audit['history_records'].values())>0
+          print('ORIGINAL_PITCHAPI_GA3_GTS3_VALIDATED',audit['history_records'])
+          print('RECORDS_WITH_ORIGINAL_HASH_VERIFIED',audit['raw_response_hashes_verified'])
+          print('ORIGINAL_MODEL_FORMULAS_CHANGED',audit['model_formulas_changed'])
           PY
