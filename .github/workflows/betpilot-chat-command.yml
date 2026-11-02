@@ -41,7 +41,8 @@ jobs:
           event=json.loads(pathlib.Path(os.environ['GITHUB_EVENT_PATH']).read_text('utf8'))
           request=event['issue']['title']
           if not (isinstance(request,str) and len(request)<=200
-                  and re.fullmatch(r'BETPILOT:\\s*[^\\r\\n]{2,90}\\s+-\\s+[^\\r\\n]{2,90}', request)):
+                  and all(ord(ch)>=32 for ch in request)
+                  and re.fullmatch(r'BETPILOT: *.{2,90} +- +.{2,90}', request)):
               pathlib.Path('output/issue').mkdir(parents=True,exist_ok=True)
               pathlib.Path('output/issue/BETPILOT_STATUS.json').write_text(
                   json.dumps({'status':'INVALID_COMMAND','reason_code':'INVALID_ISSUE_TITLE','real_fixture_analysis_confirmed':False}))
